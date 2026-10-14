@@ -1,0 +1,42 @@
+[
+  {
+    "label": "home",
+    "path": "/",
+    "renderedChars": 1080,
+    "errorCount": 0,
+    "errors": [],
+    "hydrationMismatch": false,
+    "invalidDateChild": false
+  },
+  {
+    "label": "twin",
+    "path": "/assessments/asm_northshore_now/twin",
+    "renderedChars": 963,
+    "errorCount": 1,
+    "errors": [
+      "pageerror: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:\n\n- A server/client branch `if (typeof window !== 'undefined')`.\n- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.\n- Date formatting in a user's locale which doesn"
+    ],
+    "hydrationMismatch": true,
+    "invalidDateChild": false
+  },
+  {
+    "label": "audit",
+    "path": "/assessments/asm_northshore_now/audit",
+    "renderedChars": 366,
+    "errorCount": 1,
+    "errors": [
+      "%o\n\n%s\n\n%s\n Error: Objects are not valid as a React child (found: [object Date]). If you meant to render a collection of children, use an array instead.\n    at throwOnInvalidObjectTypeImpl (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=d23c4a60:3540:10)\n    at throwOnInvalidObjectType (http://127.0.0.1:8080/node_modules/.vite/deps/react-dom_client.js?v=d23c4a60:3544:105)\n    "
+    ],
+    "hydrationMismatch": false,
+    "invalidDateChild": true
+  },
+  {
+    "label": "executive",
+    "path": "/assessments/asm_northshore_now",
+    "renderedChars": 1286,
+    "errorCount": 0,
+    "errors": [],
+    "hydrationMismatch": false,
+    "invalidDateChild": false
+  }
+]

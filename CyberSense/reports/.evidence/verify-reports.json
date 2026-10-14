@@ -1,0 +1,66 @@
+{
+  "summary": {
+    "reports/CyberSense_Technical_Audit_Report.md": {
+      "bytes": 41410,
+      "lines": 299,
+      "words": 5930,
+      "headings": 17,
+      "tables": 11,
+      "malformedTables": 0
+    },
+    "reports/Repository_Inventory.md": {
+      "bytes": 12774,
+      "lines": 171,
+      "words": 1713,
+      "headings": 10,
+      "tables": 7,
+      "malformedTables": 0
+    },
+    "reports/Test_Results.md": {
+      "bytes": 16062,
+      "lines": 184,
+      "words": 2363,
+      "headings": 17,
+      "tables": 12,
+      "malformedTables": 0
+    },
+    "reports/Prioritized_Improvement_Roadmap.md": {
+      "bytes": 32764,
+      "lines": 268,
+      "words": 4426,
+      "headings": 36,
+      "tables": 1,
+      "malformedTables": 0
+    },
+    "reports/Audit_Progress_Checklist.md": {
+      "bytes": 6238,
+      "lines": 66,
+      "words": 1039,
+      "headings": 5,
+      "tables": 4,
+      "malformedTables": 0
+    },
+    "ids": {
+      "definedTD": 21,
+      "definedPR": 15,
+      "definedR": 28,
+      "undefinedTD": [],
+      "undefinedPR": [],
+      "undefinedR": []
+    }
+  },
+  "links": {
+    "Repository_Inventory.md": true,
+    "Test_Results.md": true,
+    "Prioritized_Improvement_Roadmap.md": true
+  },
+  "counts": {
+    "mainStatesDomainTests": true,
+    "trStatesDomainTests": true,
+    "mainStatesScriptsFailures": true,
+    "trStatesScriptsFailures": true,
+    "bothState68": true
+  },
+  "problems": [],
+  "verdict": "OK"
+}

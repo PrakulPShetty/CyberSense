@@ -1,0 +1,37 @@
+[
+  {
+    "step": "create_assessment_e2e",
+    "ok": true,
+    "ms": 1756,
+    "consoleErrors": 0,
+    "id": "asm_444123e24aff40d7"
+  },
+  {
+    "step": "report_generate_e2e",
+    "ok": true,
+    "ms": 1070,
+    "consoleErrors": 0,
+    "includesDbWrite": true
+  },
+  {
+    "step": "assistant_ask_e2e",
+    "ok": true,
+    "ms": 905,
+    "consoleErrors": 0,
+    "provider": "DETERMINISTIC"
+  },
+  {
+    "step": "optimize_e2e",
+    "ok": true,
+    "ms": 1030,
+    "consoleErrors": 0,
+    "usesPageDefaults": "budget=40,maxControls=3"
+  },
+  {
+    "step": "simulate_mfa_e2e",
+    "ok": true,
+    "ms": 1122,
+    "consoleErrors": 0,
+    "sawResidual": true
+  }
+]

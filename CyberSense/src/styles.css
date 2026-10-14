@@ -1,0 +1,93 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --color-background: #09090b;
+  --color-foreground: #ececef;
+  --color-card: #121214;
+  --color-card-foreground: #ececef;
+  --color-popover: #161618;
+  --color-popover-foreground: #ececef;
+  --color-muted: #1a1a1e;
+  --color-muted-foreground: #8b8b93;
+  --color-border: #27272b;
+  --color-input: #27272b;
+  --color-primary: #d8dbe3;
+  --color-primary-foreground: #09090b;
+  --color-secondary: #1c1c20;
+  --color-secondary-foreground: #ececef;
+  --color-accent: #d8dbe3;
+  --color-accent-foreground: #09090b;
+  --color-destructive: #d46a5c;
+  --color-destructive-foreground: #fff8f6;
+  --color-ring: #d8dbe3;
+  --color-critical: #d46a5c;
+  --color-high: #c9a36a;
+  --color-medium: #8fa3c4;
+  --color-low: #6d9a80;
+  --color-unknown: #6b6b73;
+  --color-surface: #121214;
+  --color-surface-2: #18181c;
+  --color-hairline: rgba(236, 236, 239, 0.1);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius: 10px;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.hairline {
+  box-shadow: 0 0 0 1px var(--color-hairline);
+}
+
+.scan-grid {
+  background-image:
+    linear-gradient(to right, rgba(236, 236, 239, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(236, 236, 239, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+}

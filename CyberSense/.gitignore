@@ -1,0 +1,52 @@
+# Sensitive files
+.env
+.env.*
+!.env.example
+*.env
+.envrc
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.keystore
+credentials.json
+serviceAccount*.json
+*-secret*
+secrets.*
+secrets/
+private-token*
+*.token
+
+# Logs & temp
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Dependencies & build output
+node_modules/
+dist/
+build/
+.next/
+.tanstack/
+coverage/
+.nitro/
+.output/
+
+# Platform / tooling caches (not app source)
+.vercel/
+.grok/
+.gcp/
+.aws/
+.azure/
+.ssh/
+.turbo/
+.cache/
+.node_modules.lock
+screenshots/
+artifacts/
+attachments/
+docs/
+
