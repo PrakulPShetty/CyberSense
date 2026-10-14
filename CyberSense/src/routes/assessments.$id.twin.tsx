@@ -14,7 +14,7 @@ function TwinPage() {
       <div>
         <h1 className="text-2xl font-medium tracking-tight">Exposure twin</h1>
         <p className="text-sm text-muted-foreground">
-          Immutable snapshot of what was known at {new Date(snap.timestamp).toLocaleString()}. Historical twins are never mutated.
+          Immutable snapshot of what was known at {new Date(snap.timestamp).toUTCString()}. Historical twins are never mutated.
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

@@ -248,11 +248,11 @@ export function simulateDefense(args: {
   const { graph: nextGraph, changed } = applyControls(args.graph, args.assets, args.controls);
   const nextPaths = generateAttackPaths(args.assessmentId, nextGraph, args.assets);
   const nextRisk = buildRisk(args.assessmentId, nextGraph, nextPaths, args.assets, args.evidence, args.now);
-  const beforeRisk = args.paths.length ? round0(args.paths.reduce((s, p) => Math.max(s, p.risk), 0) * 0 + (nextRisk.overallScore >= 0 ? 0 : 0)) : 0;
-  // Use provided current overall from max of current path risks' assessment: caller passes scored paths
+  // Use the caller-scored path risks as the current overall posture.
   const currentOverall = args.paths.length
     ? round0(args.paths.slice().sort((a, b) => b.risk - a.risk).slice(0, 5).reduce((s, p, _, arr) => s + p.risk / arr.length, 0))
     : 12;
+  const beforeRisk = currentOverall;
   const surv = survivability(args.paths, nextPaths, currentOverall, nextRisk.overallScore);
   surv.residualRisk = nextRisk.overallScore;
   surv.residualBand = nextRisk.band;

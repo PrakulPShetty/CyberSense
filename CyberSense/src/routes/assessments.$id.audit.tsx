@@ -24,7 +24,7 @@ function AuditPage() {
           <div key={row.id} className="px-4 py-3 text-sm">
             <div className="flex flex-wrap justify-between gap-2">
               <span className="font-medium">{row.action}</span>
-              <span className="font-mono text-[11px] text-muted-foreground">{row.createdAt}</span>
+              <span className="font-mono text-[11px] text-muted-foreground">{String(row.createdAt)}</span>
             </div>
             <pre className="mt-1 overflow-x-auto text-[11px] text-muted-foreground">{JSON.stringify(row.details, null, 0)}</pre>
           </div>
