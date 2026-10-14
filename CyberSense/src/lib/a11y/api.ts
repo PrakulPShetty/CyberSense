@@ -1,5 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getA11yScan, listA11yScans, saveA11yFailure, saveA11yScan } from "./repo.ts";
+import { explainFinding } from "./assistant.ts";
+import { buildA11yReportPdf } from "./report.ts";
+import { compareScans } from "./compare.ts";
+import { buildRecommendations } from "./recommendations.ts";
 import type { A11yScanListItem, A11yScanOutcome, A11yScanRecord } from "./types.ts";
 
 /**
@@ -40,3 +44,36 @@ export const listA11yScansFn = createServerFn({ method: "GET" }).handler(
 export const getA11yScanFn = createServerFn({ method: "GET" })
   .validator((input: { id: string }) => input)
   .handler(async ({ data }): Promise<A11yScanRecord | null> => getA11yScan(data.id));
+
+export const explainA11yFindingFn = createServerFn({ method: "POST" })
+  .validator((input: { scanId: string; findingId?: string }) => input)
+  .handler(async ({ data }) => {
+    const scan = await getA11yScan(data.scanId);
+    if (!scan) return null;
+    return explainFinding(scan, data.findingId);
+  });
+
+export const generateA11yReportFn = createServerFn({ method: "POST" })
+  .validator((input: { scanId: string }) => input)
+  .handler(async ({ data }) => {
+    const scan = await getA11yScan(data.scanId);
+    if (!scan) return null;
+    const base64 = buildA11yReportPdf(scan);
+    return { scanId: scan.id, base64, filename: `CyberSense-accessibility-${scan.id}.pdf` };
+  });
+
+export const compareA11yScansFn = createServerFn({ method: "POST" })
+  .validator((input: { baseId: string; laterId: string }) => input)
+  .handler(async ({ data }) => {
+    const [base, later] = await Promise.all([getA11yScan(data.baseId), getA11yScan(data.laterId)]);
+    if (!base || !later) return null;
+    return compareScans(base, later);
+  });
+
+export const a11yRecommendationsFn = createServerFn({ method: "POST" })
+  .validator((input: { scanId: string }) => input)
+  .handler(async ({ data }) => {
+    const scan = await getA11yScan(data.scanId);
+    if (!scan) return null;
+    return buildRecommendations(scan);
+  });

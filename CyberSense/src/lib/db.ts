@@ -9,6 +9,13 @@ const rawDatabaseUrl =
   typeof process !== "undefined" ? process.env.DATABASE_URL : undefined;
 const databaseUrl =
   rawDatabaseUrl && rawDatabaseUrl.trim() ? rawDatabaseUrl : undefined;
+// Optional local persistent directory for the embedded PGLite fallback. When set,
+// PGLite persists to this directory instead of resetting on process restart. This
+// is for local development/testing only; serverless production should still use
+// `DATABASE_URL`.
+const rawPgliteDataDir =
+  typeof process !== "undefined" ? process.env.CYBERSENSE_PGLITE_DATA_DIR : undefined;
+const pgliteDataDir = rawPgliteDataDir && rawPgliteDataDir.trim() ? rawPgliteDataDir : undefined;
 
 /**
  * Active backend: real **Neon** when `DATABASE_URL` is set (deployed / configured
@@ -112,6 +119,7 @@ async function createPgliteSql(): Promise<Sql> {
   globalRef.__pgliteInstance__ ??= (async () => {
     const { PGlite } = await import("@electric-sql/pglite");
     const pg = new PGlite({
+      dataDir: pgliteDataDir,
       parsers: {
         [OID_INT8]: Number,
         [OID_DATE]: identity,

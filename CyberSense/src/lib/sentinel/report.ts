@@ -49,16 +49,16 @@ export function buildReport(snap: TwinSnapshot, simulations: SimulationResult[])
       references: snap.drift ? [snap.drift.previousAssessmentId] : [],
     },
     {
-      heading: "SENTINEL-X Exposure Momentum",
+      heading: "CyberSense Exposure Momentum",
       body: snap.momentum
-        ? `${snap.momentum.label}: ${snap.momentum.score} (${snap.momentum.direction}). This is a SENTINEL-X project metric, not an industry standard.`
+        ? `${snap.momentum.label}: ${snap.momentum.score} (${snap.momentum.direction}). This is a CyberSense project metric, not an industry standard.`
         : "Momentum not computed.",
       references: [],
     },
   ];
 
   return {
-    title: `SENTINEL-X assessment report — ${snap.organization.name}`,
+    title: `CyberSense assessment report — ${snap.organization.name}`,
     generatedAt: new Date().toISOString(),
     assessmentId: snap.assessmentId,
     mode: snap.mode,

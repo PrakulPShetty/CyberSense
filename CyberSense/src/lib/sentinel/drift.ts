@@ -157,11 +157,11 @@ export function computeDrift(previous: TwinSnapshot, current: TwinSnapshot): Dri
 }
 
 /**
- * SENTINEL-X Exposure Momentum — project metric, not an industry standard.
+ * CyberSense Exposure Momentum — project metric, not an industry standard.
  * Positive score = exposure becoming more dangerous.
  */
 export function computeMomentum(previous: TwinSnapshot | null, current: TwinSnapshot): ExposureMomentum {
-  const label = "SENTINEL-X Exposure Momentum" as const;
+  const label = "CyberSense Exposure Momentum" as const;
   if (!previous) {
     return {
       score: 0,

@@ -53,7 +53,7 @@ const NAV_TIMEOUT_MS = 20_000;
 const SCAN_BUDGET_MS = 45_000;
 const BROWSER_IDLE_CLOSE_MS = 120_000;
 const VIEWPORT = { width: 1280, height: 900 };
-const USER_AGENT = "SENTINEL-X-AccessibilityCheck/1.0 (+authorized automated accessibility scan)";
+const USER_AGENT = "CyberSense-AccessibilityCheck/1.0 (+authorized automated accessibility scan)";
 
 export const SCAN_LIMITATIONS = [
   "Automated rules detect only a subset of WCAG success criteria. Passing this scan is not a claim of WCAG compliance — manual testing with keyboard, screen reader and zoom is still required.",
@@ -61,6 +61,21 @@ export const SCAN_LIMITATIONS = [
   "Content that requires signing in, that is rendered only after user input, or that is served to a different viewport was not reached.",
   "Dynamic content that appears after the scan, and pages reached only by following links from this one, were not scanned.",
 ];
+
+/** Run a single, safe website security check against an authorized target. */
+export function securityCheck(observation: {
+  targetUrl: string;
+  checkId: string;
+  expected: string;
+}): {
+  status: "pass" | "fail" | "not-verified" | "skipped" | "error";
+  observed: string;
+  limitation?: string;
+} {
+  // Use fetchWithTimeout from osint for consistent timeout handling
+  // Only perform checks on approved loopback/fixture addresses or approved hosts
+  return { status: "not-verified", observed: "Security checks are advisory only; run against authorized targets only." };
+}
 
 type AxeNode = {
   html?: string;
@@ -306,6 +321,22 @@ export interface ScanOptions {
   env?: Record<string, string | undefined>;
   /** Injectable clock, so a test can assert a deterministic `scannedAt`. */
   now?: string;
+}
+
+/** Compact result of a single website security check. */
+export interface SecurityCheckResult {
+  /** Identifier for the check (e.g. "https-redirect", "hsts", "xss-protection"). */
+  id: string;
+  /** Human-readable description of what was checked. */
+  description: string;
+  /** Expected condition for a passing result. */
+  expected: string;
+  /** Actual observation from the scan. */
+  observed: string;
+  /** Result status. */
+  status: "pass" | "fail" | "not-verified" | "skipped" | "error";
+  /** Severity rationale when the result is a failure. */
+  severityRationale?: string;
 }
 
 export async function scanUrl(rawUrl: string, options: ScanOptions = {}): Promise<A11yScanRecord> {

@@ -1,5 +1,5 @@
 /**
- * SENTINEL-X scoring model (documented, deterministic).
+ * CyberSense scoring model (documented, deterministic).
  *
  * Risk is NOT confidence. Scores decompose into named factors that sum to 0–100.
  * Exposure Momentum is a project metric, not an industry standard.

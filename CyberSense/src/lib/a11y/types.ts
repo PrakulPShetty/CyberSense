@@ -1,7 +1,7 @@
 /**
  * Accessibility (Track D) domain contracts.
  *
- * These are deliberately SEPARATE from the SENTINEL-X cyber exposure model in
+ * These are deliberately SEPARATE from the CyberSense cyber exposure model in
  * `@/lib/sentinel/types`: an accessibility violation is a fact about a rendered
  * page, not a modeled attack path, and mixing the two would corrupt both.
  */

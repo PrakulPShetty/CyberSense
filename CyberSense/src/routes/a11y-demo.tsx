@@ -12,7 +12,7 @@ import { createFileRoute } from "@tanstack/react-router";
  * decide the computed colours, and a contrast failure has to be deterministic.
  */
 export const Route = createFileRoute("/a11y-demo")({
-  head: () => ({ meta: [{ title: "Accessibility test fixture (synthetic) — SENTINEL-X" }] }),
+  head: () => ({ meta: [{ title: "Accessibility test fixture (synthetic) — CyberSense" }] }),
   component: A11yFixture,
 });
 
@@ -51,7 +51,7 @@ function A11yFixture() {
     <div style={shell} data-a11y-fixture="deliberate-violations">
       <div style={banner} role="note">
         <strong>Synthetic accessibility test fixture.</strong> This page intentionally contains accessibility defects so
-        that a scan can be checked against known axe-core rules. It is not part of the SENTINEL-X interface and must not
+        that a scan can be checked against known axe-core rules. It is not part of the CyberSense interface and must not
         be copied into it.
       </div>
 
@@ -67,7 +67,7 @@ function A11yFixture() {
       {/* Correct control: a described image must NOT be reported. */}
       <div style={block}>
         <p style={{ margin: 0 }}>Correct control — described image (expected to pass):</p>
-        <img src="/favicon.svg" width={32} height={32} alt="SENTINEL-X shield mark" />
+        <img src="/favicon.svg" width={32} height={32} alt="CyberSense shield mark" />
       </div>
 
       {/* color-contrast: ~2.0:1 against white, far below the 4.5:1 minimum. */}

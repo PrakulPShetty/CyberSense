@@ -17,7 +17,7 @@ export function Wordmark({ compact = false }: { compact?: boolean }) {
     <div className="flex items-center gap-2 text-foreground">
       <SentinelMark className="size-6" />
       <div className="leading-none">
-        <div className="text-sm font-medium tracking-[0.14em]">SENTINEL-X</div>
+        <div className="text-sm font-medium tracking-[0.14em]">CyberSense</div>
         {!compact && <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Exposure twin</div>}
       </div>
     </div>

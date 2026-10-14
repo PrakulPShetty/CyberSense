@@ -10,6 +10,10 @@ export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   );
 }
 
+export function CardNeon({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("card-neon rounded-2xl", className)} {...props} />;
+}
+
 export function CardHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("px-5 pt-5 pb-3", className)} {...props} />;
 }

@@ -1,22 +1,12 @@
 import { Link, Outlet, useParams, useRouterState } from "@tanstack/react-router";
 import {
-  Accessibility,
   Activity,
-  Binary,
-  Box,
   ClipboardList,
-  GitBranch,
   History,
   LayoutDashboard,
-  LineChart,
-  Lock,
   Menu,
   MessageSquare,
-  Network,
-  Route as RouteIcon,
-  Shield,
   SlidersHorizontal,
-  ScanSearch,
   X,
 } from "lucide-react";
 import { useState } from "react";
@@ -26,25 +16,12 @@ import { Wordmark } from "./brand";
 import { Severity, Score } from "./severity";
 
 const NAV: { to: string; label: string; icon: typeof LayoutDashboard; absolute?: boolean }[] = [
-  { to: "", label: "Executive", icon: LayoutDashboard },
-  { to: "/technical", label: "Technical", icon: Binary },
-  { to: "/assets", label: "Assets", icon: Box },
-  { to: "/evidence", label: "Evidence", icon: Lock },
-  { to: "/twin", label: "Twin", icon: Activity },
-  { to: "/graph", label: "Graph", icon: Network },
-  { to: "/paths", label: "Paths", icon: RouteIcon },
-  { to: "/risk", label: "Risk", icon: Shield },
-  { to: "/uncertainty", label: "Uncertainty", icon: ScanSearch },
-  { to: "/simulate", label: "Simulator", icon: GitBranch },
-  { to: "/optimize", label: "Optimize", icon: SlidersHorizontal },
-  { to: "/drift", label: "Drift", icon: History },
-  { to: "/momentum", label: "Momentum", icon: LineChart },
-  { to: "/assistant", label: "Analyst", icon: MessageSquare },
+  { to: "", label: "Scan Website", icon: LayoutDashboard },
+  { to: "/results", label: "Scan Results", icon: Activity },
+  { to: "/recommendations", label: "Fix Recommendations", icon: SlidersHorizontal },
+  { to: "/assistant", label: "AI Assistant", icon: MessageSquare },
+  { to: "/history", label: "Scan History / Progress", icon: History },
   { to: "/reports", label: "Reports", icon: ClipboardList },
-  { to: "/audit", label: "Audit", icon: ClipboardList },
-  // Track D lives outside the assessment tree: accessibility findings are page
-  // facts, not modeled attack paths, and are stored separately.
-  { to: "/accessibility", label: "Accessibility", icon: Accessibility, absolute: true },
 ];
 
 export function AssessmentShell() {
