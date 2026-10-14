@@ -1,5 +1,6 @@
 import { Link, Outlet, useParams, useRouterState } from "@tanstack/react-router";
 import {
+  Accessibility,
   Activity,
   Binary,
   Box,
@@ -24,7 +25,7 @@ import { cn } from "@/lib/utils";
 import { Wordmark } from "./brand";
 import { Severity, Score } from "./severity";
 
-const NAV = [
+const NAV: { to: string; label: string; icon: typeof LayoutDashboard; absolute?: boolean }[] = [
   { to: "", label: "Executive", icon: LayoutDashboard },
   { to: "/technical", label: "Technical", icon: Binary },
   { to: "/assets", label: "Assets", icon: Box },
@@ -41,6 +42,9 @@ const NAV = [
   { to: "/assistant", label: "Analyst", icon: MessageSquare },
   { to: "/reports", label: "Reports", icon: ClipboardList },
   { to: "/audit", label: "Audit", icon: ClipboardList },
+  // Track D lives outside the assessment tree: accessibility findings are page
+  // facts, not modeled attack paths, and are stored separately.
+  { to: "/accessibility", label: "Accessibility", icon: Accessibility, absolute: true },
 ];
 
 export function AssessmentShell() {
@@ -50,8 +54,8 @@ export function AssessmentShell() {
   const [open, setOpen] = useState(false);
 
   const items = NAV.map((n) => {
-    const href = n.to ? `/assessments/${id}${n.to}` : `/assessments/${id}`;
-    const active = n.to === "" ? pathname === href : pathname.startsWith(href);
+    const href = n.absolute ? n.to : n.to ? `/assessments/${id}${n.to}` : `/assessments/${id}`;
+    const active = n.absolute ? pathname.startsWith(n.to) : n.to === "" ? pathname === href : pathname.startsWith(href);
     return { ...n, href, active };
   });
 
@@ -106,7 +110,11 @@ export function AssessmentShell() {
           {snap && (
             <div className="hidden items-baseline gap-1 sm:flex">
               <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Posture</span>
-              <Score value={snap.risk.overallScore} className="text-xl" />
+              {snap.risk.insufficientEvidence ? (
+                <span className="text-xs text-unknown">no score</span>
+              ) : (
+                <Score value={snap.risk.overallScore} className="text-xl" />
+              )}
             </div>
           )}
         </header>

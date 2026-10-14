@@ -365,6 +365,12 @@ export interface RiskAssessment {
   confidence: number;
   uncertainty: number;
   evidenceQuality: number;
+  /**
+   * True when no modeled path exists, so there is nothing to score. The UI must
+   * show "insufficient evidence" rather than a reassuring low number: absence of
+   * observed exposure is not evidence of a low risk.
+   */
+  insufficientEvidence: boolean;
   factors: RiskFactor[];
   pathBreakdowns: PathRiskBreakdown[];
   criticalPathCount: number;
@@ -618,6 +624,12 @@ export interface ReportContent {
   mode: AssessmentMode;
   executiveSummary: string;
   posture: { score: number; band: RiskBand; confidence: number };
+  /**
+   * False when no modeled path existed, i.e. `posture.score` is a landscape
+   * floor rather than a scored posture. Optional so reports persisted before
+   * this field existed still render.
+   */
+  postureIsScored?: boolean;
   sections: { heading: string; body: string; references: string[] }[];
   languageDisclaimer: string;
 }

@@ -14,15 +14,26 @@ function RiskPage() {
       <div>
         <h1 className="text-2xl font-medium tracking-tight">Risk analysis</h1>
         <p className="text-sm text-muted-foreground">
-          Risk {snap.risk.overallScore} is not confidence {Math.round(snap.risk.confidence * 100)}%. Scores decompose into named factors.
+          {snap.risk.insufficientEvidence
+            ? "No modeled path was found, so no posture score is reported. Absence of observed exposure is not evidence of low risk."
+            : `Risk ${snap.risk.overallScore} is not confidence ${Math.round(snap.risk.confidence * 100)}%. Scores decompose into named factors.`}
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-3">
         <Card>
           <CardContent className="pt-5">
             <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Score</div>
-            <Score value={snap.risk.overallScore} className="text-4xl" />
-            <Severity value={snap.risk.band} className="mt-2" />
+            {snap.risk.insufficientEvidence ? (
+              <>
+                <div className="mt-1 text-2xl text-unknown">No score</div>
+                <Severity value="UNKNOWN" className="mt-2" />
+              </>
+            ) : (
+              <>
+                <Score value={snap.risk.overallScore} className="text-4xl" />
+                <Severity value={snap.risk.band} className="mt-2" />
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>

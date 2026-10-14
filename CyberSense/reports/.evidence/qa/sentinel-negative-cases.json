@@ -1,0 +1,58 @@
+{
+  "base": "http://127.0.0.1:8080",
+  "browserSource": "channel:chrome",
+  "launchFailures": [
+    "bundled-chromium: browserType.launch: Executable doesn't exist at C:\\Users\\BALAJI N\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe"
+  ],
+  "cases": {
+    "outOfScopeTarget": {
+      "url": "/",
+      "inlineError": null,
+      "errorText": "Target is not a valid public domain and is out of scope.",
+      "statusBadge": "COMPLETED",
+      "posture": "84 CRITICAL",
+      "confidence": null,
+      "criticalPaths": "15",
+      "insufficientEvidence": false,
+      "bodyTextLen": 1353,
+      "sample": "SENTINEL-X EXPOSURE TWIN AUTHORIZED TARGETS ONLY CYBER EXPOSURE TWIN Evidence before interpretation. Simulation before change. SENTINEL-X builds a temporal model of authorized external exposure, traces attack paths to evidence, and tests defenses without touching the target. The model is never a confirmed compromise. Northshore State University Synthetic demonstration twin · demo-university.edu PO"
+    },
+    "missingConfirmation": {
+      "url": "/",
+      "inlineError": null,
+      "errorText": "Authorization confirmation must include: \"I confirm this target is authorized\".",
+      "statusBadge": "COMPLETED",
+      "posture": "84 CRITICAL",
+      "confidence": null,
+      "criticalPaths": "15",
+      "insufficientEvidence": false,
+      "bodyTextLen": 1376,
+      "sample": "SENTINEL-X EXPOSURE TWIN AUTHORIZED TARGETS ONLY CYBER EXPOSURE TWIN Evidence before interpretation. Simulation before change. SENTINEL-X builds a temporal model of authorized external exposure, traces attack paths to evidence, and tests defenses without touching the target. The model is never a confirmed compromise. Northshore State University Synthetic demonstration twin · demo-university.edu PO"
+    },
+    "demoAssessment": {
+      "url": "/assessments/asm_eb2e6afd0d454b9a",
+      "inlineError": null,
+      "errorText": null,
+      "statusBadge": "COMPLETED",
+      "posture": "84 EXECUTIVE",
+      "confidence": "77",
+      "criticalPaths": "15",
+      "insufficientEvidence": false,
+      "bodyTextLen": 1100,
+      "sample": "SENTINEL-X Executive Technical Assets Evidence Twin Graph Paths Risk Uncertainty Simulator Optimize Drift Momentum Analyst Reports Audit Accessibility Northshore State University demo-university.edu DEMO COMPLETED POSTURE 84 EXECUTIVE POSTURE Modeled exposure, not a breach report POSTURE 84 CRITICAL CONFIDENCE 77% Not the same as risk CRITICAL PATHS 15 Modeled to crown jewels MOMENTUM 0 STABLE Hig"
+    },
+    "liveAssessment": {
+      "url": "/assessments/asm_92c7a005b7994322",
+      "inlineError": null,
+      "errorText": null,
+      "statusBadge": "PARTIAL",
+      "posture": "no score",
+      "confidence": "40",
+      "criticalPaths": "0",
+      "insufficientEvidence": true,
+      "bodyTextLen": 717,
+      "sample": "SENTINEL-X Executive Technical Assets Evidence Twin Graph Paths Risk Uncertainty Simulator Optimize Drift Momentum Analyst Reports Audit Accessibility example.com example.com LIVE PARTIAL POSTURE no score EXECUTIVE POSTURE Modeled exposure, not a breach report POSTURE Insufficient evidence No modeled path — absence of evidence is not low risk CONFIDENCE 40% Not the same as risk CRITICAL PATHS 0 Mo"
+    }
+  },
+  "pageErrors": []
+}

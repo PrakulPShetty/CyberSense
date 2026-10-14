@@ -10,6 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as A11yDemoRouteImport } from './routes/a11y-demo'
+import { Route as AccessibilityRouteImport } from './routes/accessibility'
+import { Route as AccessibilityIndexRouteImport } from './routes/accessibility.index'
+import { Route as AccessibilityScanIdRouteImport } from './routes/accessibility.$scanId'
 import { Route as AssessmentsIdRouteImport } from './routes/assessments.$id'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
 import { Route as ApiV1ReadyRouteImport } from './routes/api/v1/ready'
@@ -34,6 +38,26 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const A11yDemoRoute = A11yDemoRouteImport.update({
+  id: '/a11y-demo',
+  path: '/a11y-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessibilityRoute = AccessibilityRouteImport.update({
+  id: '/accessibility',
+  path: '/accessibility',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccessibilityIndexRoute = AccessibilityIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccessibilityRoute,
+} as any)
+const AccessibilityScanIdRoute = AccessibilityScanIdRouteImport.update({
+  id: '/$scanId',
+  path: '/$scanId',
+  getParentRoute: () => AccessibilityRoute,
 } as any)
 const AssessmentsIdRoute = AssessmentsIdRouteImport.update({
   id: '/assessments/$id',
@@ -134,7 +158,11 @@ const AssessmentsIdUncertaintyRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a11y-demo': typeof A11yDemoRoute
+  '/accessibility': typeof AccessibilityRouteWithChildren
+  '/accessibility/$scanId': typeof AccessibilityScanIdRoute
   '/assessments/$id': typeof AssessmentsIdRouteWithChildren
+  '/accessibility/': typeof AccessibilityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
   '/assessments/$id/assets': typeof AssessmentsIdAssetsRoute
@@ -156,6 +184,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a11y-demo': typeof A11yDemoRoute
+  '/accessibility/$scanId': typeof AccessibilityScanIdRoute
+  '/accessibility': typeof AccessibilityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
   '/assessments/$id/assets': typeof AssessmentsIdAssetsRoute
@@ -178,7 +209,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/a11y-demo': typeof A11yDemoRoute
+  '/accessibility': typeof AccessibilityRouteWithChildren
+  '/accessibility/$scanId': typeof AccessibilityScanIdRoute
   '/assessments/$id': typeof AssessmentsIdRouteWithChildren
+  '/accessibility/': typeof AccessibilityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
   '/assessments/$id/assets': typeof AssessmentsIdAssetsRoute
@@ -202,7 +237,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/a11y-demo'
+    | '/accessibility'
+    | '/accessibility/$scanId'
     | '/assessments/$id'
+    | '/accessibility/'
     | '/api/v1/health'
     | '/api/v1/ready'
     | '/assessments/$id/assets'
@@ -224,6 +263,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/a11y-demo'
+    | '/accessibility/$scanId'
+    | '/accessibility'
     | '/api/v1/health'
     | '/api/v1/ready'
     | '/assessments/$id/assets'
@@ -245,7 +287,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/a11y-demo'
+    | '/accessibility'
+    | '/accessibility/$scanId'
     | '/assessments/$id'
+    | '/accessibility/'
     | '/api/v1/health'
     | '/api/v1/ready'
     | '/assessments/$id/assets'
@@ -268,6 +314,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  A11yDemoRoute: typeof A11yDemoRoute
+  AccessibilityRoute: typeof AccessibilityRouteWithChildren
   AssessmentsIdRoute: typeof AssessmentsIdRouteWithChildren
   ApiV1HealthRoute: typeof ApiV1HealthRoute
   ApiV1ReadyRoute: typeof ApiV1ReadyRoute
@@ -281,6 +329,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/a11y-demo': {
+      id: '/a11y-demo'
+      path: '/a11y-demo'
+      fullPath: '/a11y-demo'
+      preLoaderRoute: typeof A11yDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accessibility': {
+      id: '/accessibility'
+      path: '/accessibility'
+      fullPath: '/accessibility'
+      preLoaderRoute: typeof AccessibilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/accessibility/': {
+      id: '/accessibility/'
+      path: '/'
+      fullPath: '/accessibility/'
+      preLoaderRoute: typeof AccessibilityIndexRouteImport
+      parentRoute: typeof AccessibilityRoute
+    }
+    '/accessibility/$scanId': {
+      id: '/accessibility/$scanId'
+      path: '/$scanId'
+      fullPath: '/accessibility/$scanId'
+      preLoaderRoute: typeof AccessibilityScanIdRouteImport
+      parentRoute: typeof AccessibilityRoute
     }
     '/assessments/$id': {
       id: '/assessments/$id'
@@ -418,6 +494,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AccessibilityRouteChildren {
+  AccessibilityScanIdRoute: typeof AccessibilityScanIdRoute
+  AccessibilityIndexRoute: typeof AccessibilityIndexRoute
+}
+
+const AccessibilityRouteChildren: AccessibilityRouteChildren = {
+  AccessibilityScanIdRoute: AccessibilityScanIdRoute,
+  AccessibilityIndexRoute: AccessibilityIndexRoute,
+}
+
+const AccessibilityRouteWithChildren = AccessibilityRoute._addFileChildren(
+  AccessibilityRouteChildren,
+)
+
 interface AssessmentsIdRouteChildren {
   AssessmentsIdAssetsRoute: typeof AssessmentsIdAssetsRoute
   AssessmentsIdAssistantRoute: typeof AssessmentsIdAssistantRoute
@@ -462,6 +552,8 @@ const AssessmentsIdRouteWithChildren = AssessmentsIdRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  A11yDemoRoute: A11yDemoRoute,
+  AccessibilityRoute: AccessibilityRouteWithChildren,
   AssessmentsIdRoute: AssessmentsIdRouteWithChildren,
   ApiV1HealthRoute: ApiV1HealthRoute,
   ApiV1ReadyRoute: ApiV1ReadyRoute,

@@ -19,6 +19,11 @@ const BAND: Record<string, string> = {
   MODELED: "text-medium bg-medium/15",
   INFERRED: "text-high bg-high/15",
   UNKNOWN: "text-unknown bg-muted",
+  // axe-core impact values (lowercase), used by the Track D accessibility views.
+  critical: "text-critical bg-critical/15",
+  serious: "text-high bg-high/15",
+  moderate: "text-medium bg-medium/15",
+  minor: "text-low bg-low/15",
   COMPLETED: "text-low bg-low/15",
   PARTIAL: "text-high bg-high/15",
   FAILED: "text-critical bg-critical/15",

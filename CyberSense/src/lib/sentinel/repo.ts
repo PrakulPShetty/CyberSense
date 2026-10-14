@@ -57,12 +57,40 @@ export async function audit(action: string, assessmentId: string | null, details
 const SEED_REVISION = "3";
 const SEED_IDS = ["asm_northshore_w1", "asm_northshore_w2", "asm_northshore_now"];
 
-export async function ensureSeeded(): Promise<void> {
+/**
+ * Single-flight seeding.
+ *
+ * The home page's loader requests the assessment list and the history in
+ * parallel; both (and `getSnapshot`, which the history calls per row) enter this
+ * function, and on a cold database every one of them saw "no organization yet"
+ * and raced to INSERT it. The losers raised
+ * `duplicate key value violates unique constraint "organizations_pkey"`, which
+ * TanStack Start surfaced as the error boundary — so the very first page load
+ * after a cold start returned 500 and only the second attempt worked.
+ *
+ * One shared promise means the corpus is seeded once per process. The promise is
+ * kept on globalThis because dev HMR creates new module instances, and a failed
+ * pass clears its slot so the next call retries instead of memoizing the error.
+ */
+const seedGlobal = globalThis as typeof globalThis & { __sentinelSeedPromise__?: Promise<void> };
+
+export function ensureSeeded(): Promise<void> {
+  seedGlobal.__sentinelSeedPromise__ ??= seedDemoCorpus().catch((err) => {
+    seedGlobal.__sentinelSeedPromise__ = undefined;
+    throw err;
+  });
+  return seedGlobal.__sentinelSeedPromise__;
+}
+
+async function seedDemoCorpus(): Promise<void> {
   const sql = await getSql();
   const existing = await sql.query<{ id: string }>(`select id from organizations where id = $1`, ["org_northshore"]);
   if (!existing.length) {
+    // Idempotent as a second line of defence: a concurrent writer must not be
+    // able to turn a seed into a 500.
     await sql.query(
-      `insert into organizations (id, name, canonical_domain, sector) values ($1,$2,$3,$4)`,
+      `insert into organizations (id, name, canonical_domain, sector) values ($1,$2,$3,$4)
+       on conflict (id) do nothing`,
       ["org_northshore", "Northshore State University", DEMO_DOMAIN, "Higher education (synthetic)"],
     );
   }

@@ -48,5 +48,7 @@ coverage/
 screenshots/
 artifacts/
 attachments/
-docs/
+docs/*
+# The mentor-facing report is a deliverable, not scratch tooling.
+!docs/MENTOR_DEMO_GUIDE.md
 

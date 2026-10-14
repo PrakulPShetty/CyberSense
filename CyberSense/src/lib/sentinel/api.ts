@@ -25,10 +25,23 @@ export const healthFn = createServerFn({ method: "GET" }).handler(async () => ({
   time: new Date().toISOString(),
 }));
 
-export const readyFn = createServerFn({ method: "GET" }).handler(async () => ({
-  status: "ready",
-  database: true,
-}));
+export const readyFn = createServerFn({ method: "GET" }).handler(async () => {
+  // Observed, not asserted: a hard-coded `database: true` reports readiness for
+  // a database that was never contacted.
+  try {
+    const { getSql } = await import("@/lib/db");
+    const sql = await getSql();
+    await sql.query("select 1 as ok");
+    return { status: "ready" as const, database: true, checkedAt: new Date().toISOString() };
+  } catch (err) {
+    return {
+      status: "unavailable" as const,
+      database: false,
+      error: err instanceof Error ? err.message : "database check failed",
+      checkedAt: new Date().toISOString(),
+    };
+  }
+});
 
 export const listAssessmentsFn = createServerFn({ method: "GET" }).handler(async () => listAssessments());
 

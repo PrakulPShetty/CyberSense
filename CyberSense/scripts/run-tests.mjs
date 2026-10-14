@@ -22,6 +22,7 @@ function listSrcTests() {
     join(ROOT, 'src/lib/auth/sign-in-gate.test.ts'),
     join(ROOT, 'src/lib/sentinel/normalize.test.ts'),
     join(ROOT, 'src/lib/sentinel/engines.test.ts'),
+    join(ROOT, 'src/lib/a11y/guard.test.ts'),
   ];
 }
 

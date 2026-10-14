@@ -1,0 +1,12 @@
+{
+  "mode": "refusal",
+  "base": "http://127.0.0.1:8080",
+  "browserSource": "channel:chrome",
+  "startedAt": "2026-10-14T13:37:03.231Z",
+  "outcome": "refused",
+  "errorCode": null,
+  "message": "Scanning 127.0.0.1 is refused by default (server-side request forgery protection). To scan the built-in demonstration page, start the app with CYBERSENSE_A11Y_ALLOW_LOOPBACK=1 — `n",
+  "misconfiguration": null,
+  "pageErrors": [],
+  "finishedAt": "2026-10-14T13:37:09.255Z"
+}

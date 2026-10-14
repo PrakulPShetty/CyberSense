@@ -148,10 +148,17 @@ export const dohAdapter: OSINTSourceAdapter = {
         sourceReliability: 0.86,
         confidence: 0.9,
       });
-      run.status = observations.length ? "COMPLETED" : "PARTIAL";
+      // A no-record answer (NXDOMAIN / no A record) is NOT a successful scan and
+      // must not read as a clean result. The hostname observation above is always
+      // present, so the record count — not the observation count — decides status.
+      const aRecordCount = observations.filter((o) => o.observationType === "a_record").length;
+      run.status = aRecordCount > 0 ? "COMPLETED" : "PARTIAL";
       run.completedAt = new Date().toISOString();
       run.observationCount = observations.length;
-      run.notes = "Passive DoH only. Absence of records is not absence of risk.";
+      run.notes =
+        aRecordCount > 0
+          ? `Passive DoH only: ${aRecordCount} A record(s). Absence of records is not absence of risk.`
+          : "Passive DoH only: the resolver returned no A record for this name. That is an unknown result, not a clean one.";
       return { run, observations };
     } catch (err) {
       run.status = "FAILED";

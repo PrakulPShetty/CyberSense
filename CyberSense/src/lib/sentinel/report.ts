@@ -12,7 +12,9 @@ export function buildReport(snap: TwinSnapshot, simulations: SimulationResult[])
     },
     {
       heading: "Security posture",
-      body: `Modeled posture ${snap.risk.overallScore} (${snap.risk.band}). Confidence ${Math.round(snap.risk.confidence * 100)}%. Uncertainty ${Math.round(snap.risk.uncertainty * 100)}%. ${snap.risk.criticalPathCount} critical modeled paths. Risk is not confidence.`,
+      body: snap.risk.insufficientEvidence
+        ? `No posture score is reported: no modeled path exists for this twin. Confidence ${Math.round(snap.risk.confidence * 100)}%. Absence of observed exposure is not evidence of low risk.`
+        : `Modeled posture ${snap.risk.overallScore} (${snap.risk.band}). Confidence ${Math.round(snap.risk.confidence * 100)}%. Uncertainty ${Math.round(snap.risk.uncertainty * 100)}%. ${snap.risk.criticalPathCount} critical modeled paths. Risk is not confidence.`,
       references: [snap.risk.id],
     },
     {
@@ -60,8 +62,11 @@ export function buildReport(snap: TwinSnapshot, simulations: SimulationResult[])
     generatedAt: new Date().toISOString(),
     assessmentId: snap.assessmentId,
     mode: snap.mode,
-    executiveSummary: `Northshore-style modeled exposure for ${snap.target}. Posture ${snap.risk.overallScore} ${snap.risk.band} with confidence ${Math.round(snap.risk.confidence * 100)}%. ${snap.risk.criticalPathCount} critical modeled paths. Potential shadow assets: ${snap.shadowAssets.length}. Language: observed / modeled / potential only.`,
+    executiveSummary: snap.risk.insufficientEvidence
+      ? `Modeled exposure for ${snap.target}. No posture score is reported because no modeled path was found; confidence ${Math.round(snap.risk.confidence * 100)}%. Potential shadow assets: ${snap.shadowAssets.length}. Language: observed / modeled / potential only.`
+      : `Northshore-style modeled exposure for ${snap.target}. Posture ${snap.risk.overallScore} ${snap.risk.band} with confidence ${Math.round(snap.risk.confidence * 100)}%. ${snap.risk.criticalPathCount} critical modeled paths. Potential shadow assets: ${snap.shadowAssets.length}. Language: observed / modeled / potential only.`,
     posture: { score: snap.risk.overallScore, band: snap.risk.band, confidence: snap.risk.confidence },
+    postureIsScored: !snap.risk.insufficientEvidence,
     sections,
     languageDisclaimer:
       "This report describes modeled potential paths supported by evidence. It does not claim compromise, breach, or guaranteed exploitability.",

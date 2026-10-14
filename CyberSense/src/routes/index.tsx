@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { Accessibility, ArrowRight, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Wordmark } from "@/components/sentinel/brand";
 import { Score, Severity } from "@/components/sentinel/severity";
@@ -154,6 +154,22 @@ function Home() {
               Live mode performs passive DNS only against a fixed resolver. It never fetches the target,
               never exploits, and treats source failure as unknown — not as absence of risk.
             </p>
+            <div className="rounded-lg border border-border p-3">
+              <div className="flex items-center gap-2 text-xs font-medium">
+                <Accessibility className="size-4" aria-hidden="true" />
+                Accessibility scanner (Track D)
+              </div>
+              <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
+                Separately from the exposure twin, a real browser renders a page and axe-core reports the accessibility
+                rules it actually fails. Stored apart from cyber findings.
+              </p>
+              <Link
+                to="/accessibility"
+                className="mt-2 inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground"
+              >
+                Open the accessibility scanner <ArrowRight className="size-3" aria-hidden="true" />
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </section>
