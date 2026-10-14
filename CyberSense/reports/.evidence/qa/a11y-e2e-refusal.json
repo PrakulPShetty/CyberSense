@@ -1,0 +1,63 @@
+{
+  "base": "http://127.0.0.1:8080",
+  "expected": "refusal",
+  "targetUrl": "http://127.0.0.1:8080/a11y-demo",
+  "fixtureUrl": "http://127.0.0.1:8080/a11y-demo",
+  "checksFixtureRuleContract": true,
+  "browserSource": "channel:chrome",
+  "launchFailures": [
+    "bundled-chromium: browserType.launch: Executable doesn't exist at C:\\Users\\BALAJI N\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe"
+  ],
+  "steps": {
+    "form": {
+      "status": 200,
+      "interactive": true,
+      "interactiveSignal": "router-hydrated",
+      "interactiveMs": 3570,
+      "hasUrlInput": true,
+      "hasScanButton": true,
+      "bodyTextLen": 1301
+    },
+    "outcome": {
+      "refused": "Scan refused (LOOPBACK_BLOCKED)",
+      "renderedViolationSummary": false,
+      "bodyTextLen": 1654
+    },
+    "rules": {
+      "expected": [
+        "image-alt",
+        "color-contrast",
+        "label",
+        "select-name",
+        "button-name",
+        "link-name",
+        "aria-roles",
+        "heading-order",
+        "list",
+        "tabindex",
+        "frame-title"
+      ],
+      "found": [],
+      "missing": [
+        "image-alt",
+        "color-contrast",
+        "label",
+        "select-name",
+        "button-name",
+        "link-name",
+        "aria-roles",
+        "heading-order",
+        "list",
+        "tabindex",
+        "frame-title"
+      ]
+    },
+    "detailSample": "",
+    "fixture": {
+      "status": 200,
+      "hasBanner": true
+    }
+  },
+  "loadPhaseConsoleErrors": [],
+  "interactionConsoleErrors": []
+}

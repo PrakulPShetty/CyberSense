@@ -1,0 +1,67 @@
+{
+  "base": "http://127.0.0.1:8080",
+  "expected": "findings",
+  "targetUrl": "http://127.0.0.1:8080/a11y-demo",
+  "fixtureUrl": "http://127.0.0.1:8080/a11y-demo",
+  "checksFixtureRuleContract": true,
+  "browserSource": "channel:chrome",
+  "launchFailures": [
+    "bundled-chromium: browserType.launch: Executable doesn't exist at C:\\Users\\BALAJI N\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe"
+  ],
+  "steps": {
+    "form": {
+      "status": 200,
+      "interactive": true,
+      "interactiveSignal": "router-hydrated",
+      "interactiveMs": 3201,
+      "hasUrlInput": true,
+      "hasScanButton": true,
+      "bodyTextLen": 1301
+    },
+    "outcome": {
+      "refused": null,
+      "renderedViolationSummary": true,
+      "bodyTextLen": 1531
+    },
+    "detail": {
+      "url": "http://127.0.0.1:8080/accessibility/a11y_1331c7b82fec4f57",
+      "bodyTextLen": 11774
+    },
+    "rules": {
+      "expected": [
+        "image-alt",
+        "color-contrast",
+        "label",
+        "select-name",
+        "button-name",
+        "link-name",
+        "aria-roles",
+        "heading-order",
+        "list",
+        "tabindex",
+        "frame-title"
+      ],
+      "found": [
+        "image-alt",
+        "color-contrast",
+        "label",
+        "select-name",
+        "button-name",
+        "link-name",
+        "aria-roles",
+        "heading-order",
+        "list",
+        "tabindex",
+        "frame-title"
+      ],
+      "missing": []
+    },
+    "detailSample": "ALL ACCESSIBILITY SCANS Accessibility test fixture (synthetic) — SENTINEL-X http://127.0.0.1:8080/a11y-demo COMPLETED Scanned 2026-10-14 12:17:58 UTC · installed-chrome · axe-core 4.14.0 · 7 tag groups · viewport 1280×900 · lang en · 81 elements · 2319 ms FAILING RULES 12 FAILING ELEMENTS 28 RULES PASSED 27 UNDECIDED RULES 1 WCAG tags on the failing rules wcag2a × 7 wcag111 × 1 wcag131 × 1 wcag143 × 1 wcag244 × 1 wcag2aa × 1 wcag412 × 5 CRITICAL 4 rule(s) aria-roles · ARIA roles used must conform to valid values Ensure all elements with a role attribute use a valid value WCAG2A WCAG412 1 failing element(s) Remediation guidance div[role=\"notarealrole\"] <div role=\"notarealrole\">Content inside an invented role.</div> Fix all of the following: Role must be one of the valid ARIA roles: notarealrole button-name · Buttons must have discernible text Ensure buttons have discernible text WCAG2A WCAG412 1 failing element(s) Remediation guidance div:nth-child(9) > button <button type=\"button\" style=\"padding:8px\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 4h16v16H4z\" fill=\"none\" stroke=\"#111\" stroke-width=\"2\"></path></svg></button> Fix any o",
+    "fixture": {
+      "status": 200,
+      "hasBanner": true
+    }
+  },
+  "loadPhaseConsoleErrors": [],
+  "interactionConsoleErrors": []
+}

@@ -21,7 +21,15 @@ function Executive() {
         <h1 className="mt-1 text-2xl font-medium tracking-tight">Modeled exposure, not a breach report</h1>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi label="Posture" value={<Score value={snap.risk.overallScore} className="text-3xl" />} hint={snap.risk.band} />
+        {snap.risk.insufficientEvidence ? (
+          <Kpi
+            label="Posture"
+            value={<span className="text-xl text-unknown">Insufficient evidence</span>}
+            hint="No modeled path — absence of evidence is not low risk"
+          />
+        ) : (
+          <Kpi label="Posture" value={<Score value={snap.risk.overallScore} className="text-3xl" />} hint={snap.risk.band} />
+        )}
         <Kpi
           label="Confidence"
           value={<span className="font-mono text-3xl tabular">{Math.round(snap.risk.confidence * 100)}%</span>}

@@ -1,0 +1,41 @@
+{
+  "base": "http://127.0.0.1:8080",
+  "expected": "findings",
+  "targetUrl": "https://example.com/",
+  "fixtureUrl": "http://127.0.0.1:8080/a11y-demo",
+  "checksFixtureRuleContract": false,
+  "browserSource": "channel:chrome",
+  "launchFailures": [
+    "bundled-chromium: browserType.launch: Executable doesn't exist at C:\\Users\\BALAJI N\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe"
+  ],
+  "steps": {
+    "form": {
+      "status": 200,
+      "interactive": true,
+      "interactiveSignal": "router-hydrated",
+      "interactiveMs": 1411,
+      "hasUrlInput": true,
+      "hasScanButton": true,
+      "bodyTextLen": 1527
+    },
+    "outcome": {
+      "refused": null,
+      "renderedViolationSummary": true,
+      "bodyTextLen": 1670
+    },
+    "detail": {
+      "url": "http://127.0.0.1:8080/accessibility/a11y_a3757116173d4f2b",
+      "bodyTextLen": 3388
+    },
+    "rules": {
+      "skipped": "target is not the controlled fixture"
+    },
+    "detailSample": "ALL ACCESSIBILITY SCANS Example Domain https://example.com/ COMPLETED Scanned 2026-10-14 12:00:33 UTC · installed-chrome · axe-core 4.14.0 · 7 tag groups · viewport 1280×900 · lang en · 23 elements · 1099 ms FAILING RULES 3 FAILING ELEMENTS 9 RULES PASSED 11 UNDECIDED RULES 1 MODERATE 3 rule(s) landmark-one-main · Document should have one main landmark Ensure the document has a main landmark 1 failing element(s) Remediation guidance html <html lang=\"en\"> Fix all of the following: Document does not have a main landmark page-has-heading-one · Page should contain a level-one heading Ensure that the page, or at least one of its frames contains a level-one heading 1 failing element(s) Remediation guidance html <html lang=\"en\"> Fix all of the following: Page must have a level-one heading region · All page content should be contained by landmarks Ensure all page content is contained by landmarks 7 failing element(s) Remediation guidance p[lang=\"en\"] <p lang=\"en\">This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.</p> Fix any of the following: Some page content is not contained by landm",
+    "fixture": {
+      "status": 200,
+      "hasBanner": true
+    }
+  },
+  "loadPhaseConsoleErrors": [],
+  "interactionConsoleErrors": []
+}

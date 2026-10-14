@@ -1,6 +1,6 @@
-import { PATH_BREAK_DIFFICULTY, riskBand, round0, round1 } from "./scoring.ts";
+import { PATH_BREAK_DIFFICULTY, riskBand, round1 } from "./scoring.ts";
 import { generateAttackPaths } from "./graph.ts";
-import { buildRisk } from "./risk.ts";
+import { buildRisk, landscapeScore } from "./risk.ts";
 import { newId } from "./ids.ts";
 import type {
   Asset,
@@ -211,18 +211,18 @@ export function applyControls(graph: AttackGraph, assets: Asset[], controls: Con
   return { graph: g, changed: [...new Set(changed)] };
 }
 
-export function survivability(before: AttackPath[], after: AttackPath[], beforeRisk: number, afterRisk: number): Survivability {
-  const beforeIds = new Set(before.map((p) => p.nodeIds.join(">")));
+export function survivability(before: AttackPath[], after: AttackPath[], afterRisk: number): Survivability {
   const afterKeys = new Set(after.map((p) => p.nodeIds.join(">")));
   const removed = before.filter((p) => !afterKeys.has(p.nodeIds.join(">")));
   const surviving = after;
-  const crownBefore = before.filter((p) => p.crownJewel).length;
   const jewelsBefore = new Set(before.filter((p) => p.crownJewel).map((p) => p.destinationAssetId));
   const jewelsAfter = new Set(after.filter((p) => p.crownJewel).map((p) => p.destinationAssetId));
   return {
     totalPathsBefore: before.length,
     totalPathsAfter: after.length,
-    criticalBefore: before.filter((p) => p.risk >= 80 && p.crownJewel).length || crownBefore,
+    // Counted, never inferred: a previous `|| crownBefore` fallback inflated this
+    // whenever the strict count was zero.
+    criticalBefore: before.filter((p) => p.risk >= 80 && p.crownJewel).length,
     criticalAfter: after.filter((p) => p.risk >= 80 && p.crownJewel).length,
     highBefore: before.filter((p) => p.risk >= 60).length,
     highAfter: after.filter((p) => p.risk >= 60).length,
@@ -248,12 +248,12 @@ export function simulateDefense(args: {
   const { graph: nextGraph, changed } = applyControls(args.graph, args.assets, args.controls);
   const nextPaths = generateAttackPaths(args.assessmentId, nextGraph, args.assets);
   const nextRisk = buildRisk(args.assessmentId, nextGraph, nextPaths, args.assets, args.evidence, args.now);
-  // Use the caller-scored path risks as the current overall posture.
-  const currentOverall = args.paths.length
-    ? round0(args.paths.slice().sort((a, b) => b.risk - a.risk).slice(0, 5).reduce((s, p, _, arr) => s + p.risk / arr.length, 0))
-    : 12;
-  const beforeRisk = currentOverall;
-  const surv = survivability(args.paths, nextPaths, currentOverall, nextRisk.overallScore);
+  // The "risk before" must be the same number the rest of the application
+  // reports, or the before/after pair is not a comparison of one thing.
+  // Previously this was the mean of the five riskiest paths, which disagreed
+  // with the landscape posture shown on every other page.
+  const currentOverall = landscapeScore(args.paths, args.assets);
+  const surv = survivability(args.paths, nextPaths, nextRisk.overallScore);
   surv.residualRisk = nextRisk.overallScore;
   surv.residualBand = nextRisk.band;
   return {

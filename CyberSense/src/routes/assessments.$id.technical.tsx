@@ -68,7 +68,15 @@ function Technical() {
             </div>
           ))}
           <p className="pt-2 text-xs text-muted-foreground">
-            Overall <Score value={snap.risk.overallScore} /> with confidence {Math.round(snap.risk.confidence * 100)}%.
+            {snap.risk.insufficientEvidence ? (
+              <>
+                No posture score — no modeled path exists for this twin, so there is nothing to decompose.
+              </>
+            ) : (
+              <>
+                Overall <Score value={snap.risk.overallScore} /> with confidence {Math.round(snap.risk.confidence * 100)}%.
+              </>
+            )}
           </p>
         </CardContent>
       </Card>

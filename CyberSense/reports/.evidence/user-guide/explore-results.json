@@ -1,0 +1,197 @@
+{
+  "base": "http://127.0.0.1:8080",
+  "startedAt": "2026-10-14T13:15:12.224Z",
+  "steps": {
+    "home.initial": {
+      "title": "SENTINEL-X",
+      "hasTargetInput": true,
+      "defaultTarget": "demo-university.edu",
+      "defaultMode": "unknown",
+      "demoCardVisible": true
+    },
+    "negative.outOfScopeTarget": {
+      "stayedOnHome": true,
+      "inlineError": "Target is not a valid public domain and is out of scope."
+    },
+    "negative.missingConfirmation": {
+      "stayedOnHome": true,
+      "inlineError": "Authorization confirmation must include: \"I confirm this target is authorized\"."
+    },
+    "negative.unknownAssessmentId": {
+      "url": "/assessments/asm_does_not_exist",
+      "message": null
+    },
+    "workflowA.created": {
+      "assessmentUrl": "/assessments/asm_7163773146074bc4",
+      "statusBadge": "COMPLETED",
+      "posture": null,
+      "confidence": "91",
+      "criticalPaths": null,
+      "topPathLabels": " P-001 OBSERVED REMEDIATE 93 INTERNET → portal.demo-university.edu Confidence 91% · uncertainty 9% P-006 MODELED REMEDIATE 92 INTERNET → portal.demo-university.edu → Student Information Database Confidence 91% · uncertai"
+    },
+    "pages.technical": {
+      "tiles": null,
+      "sourceRunsVisible": true
+    },
+    "pages.assets": {
+      "rowsUnfiltered": 26,
+      "rowsAfterFilterStaging": 2,
+      "verifyBadgePresent": true
+    },
+    "pages.evidence": {
+      "evidenceItems": 34,
+      "detailFieldsVisible": [
+        "Provenance"
+      ]
+    },
+    "pages.twin": {
+      "stageLogRows": 23,
+      "authorizationBlock": true
+    },
+    "pages.graph": {
+      "pathChips": 0,
+      "svgNodes": 50,
+      "selectedPathCardVisible": false
+    },
+    "pages.paths": {
+      "pathCount": 23,
+      "factorDecompositionVisible": true,
+      "factors": [
+        "Asset criticality",
+        "External exposure",
+        "Path impact",
+        "Barrier weakness",
+        "Evidence confidence",
+        "Path depth",
+        "Path convergence"
+      ]
+    },
+    "pages.risk": {
+      "score": null,
+      "confidence": null,
+      "uncertainty": null,
+      "explicitlySeparatesRiskFromConfidence": true
+    },
+    "pages.uncertainty": {
+      "overall": null,
+      "gapCards": 23,
+      "tasksVisible": true
+    },
+    "workflowA.simulator": {
+      "riskBefore": null,
+      "riskAfter": null,
+      "criticalPaths": null,
+      "crownJewels": null,
+      "removedSurviving": [
+        "1",
+        "16"
+      ]
+    },
+    "workflowA.optimizer": {
+      "strategiesShown": 5,
+      "firstStrategy": "Remove public exposure + Restrict external access + Remove or privatize public r",
+      "efficiencyLabelPresent": true,
+      "disclaimerPresent": true
+    },
+    "pages.drift": {
+      "chart": true,
+      "explanation": null
+    },
+    "pages.momentum": {
+      "score": null,
+      "direction": "STABLE",
+      "labeledAsProjectMetric": true
+    },
+    "workflowA.assistant": {
+      "provider": "DETERMINISTIC",
+      "claimsVisible": 3,
+      "showsEvidenceRefs": true,
+      "rejectedShown": false
+    },
+    "workflowA.reports": {
+      "title": "SENTINEL-X assessment report — Northshore State University DEMO CRITICAL Northshore-style modeled exposure for demo-university.edu. Posture 84 CRITICAL with confidence 77%. 15 critical modeled paths. Potential shadow assets: 16. Language: observed / modeled / potential only. Authorization scope Target demo-university.edu authorized by Office of Information Security (synthetic) (SYNTHETIC_DEMO). Passive only. Restrictions: No exploitation; No credential attacks; No destructive testing; Passive or synthetic collection only; Do not fetch arbitrary URLs on the target. refs auth_47746bdaa3374e25 Security posture Modeled posture 84 (CRITICAL). Confidence 77%. Uncertainty 20%. 15 critical modeled paths. Risk is not confidence. refs risk_e18deb72 Exposure summary 26 assets, 25 public, 16 potential shadow assets requiring verification, 45 relationships, 34 evidence records. refs ast_6e030a68, ast_3e2870b3, ast_e6413438, ast_e5b98077, ast_f3eb603c, ast_aa7f4894 Critical modeled paths P-001 risk 93 confidence 91% (OBSERVED): Modeled potential path INTERNET → portal.demo-university.edu P-006 risk 92 confidence 91% (MODELED): Modeled potential path INTERNET → portal.demo-university.edu → Student Information Database P-005 risk 92 confidence 84% (MODELED): Modeled potential path INTERNET → api.demo-university.edu → Student Information Database P-014 risk 91 confidence 79% (OBSERVED): Modeled potential path INTERNET → auth.demo-university.edu P-004 risk 91 confidence 75% (MODELED): Modeled potential path INTERNET → admin.demo-university.edu → Student Information Database refs pth_effbdf21, pth_35c48924, pth_36d206dc, pth_cd8e9a86, pth_585b2ee3 Uncertainty and verification Verify the inferred CONNECTS_TO relationship used by P-007. Verify the inferred REFERENCES relationship used by P-011. Verify the inferred ASSOCIATED_WITH relationship used by P-012. Verify the modeled CONNECTS_TO relationship used by P-010. Verify the modeled CONNECTS_TO relationship used by P-009. refs eg_126fd9fa, eg_f485b9f9, eg_01f313fb, eg_5395b121, eg_90a7ee30 Defense simulations MFA: MFA",
+      "sectionsVisible": [
+        "Authorization scope",
+        "Security posture",
+        "Exposure summary",
+        "Critical modeled paths",
+        "Defense simulations",
+        "Security drift"
+      ],
+      "disclaimerPresent": true,
+      "survivesReload": true
+    },
+    "workflowA.audit": {
+      "actions": [
+        "report_generated",
+        "ai_query_submitted",
+        "defense_strategy_generated",
+        "simulation_created",
+        "assessment_started"
+      ],
+      "detailsJsonShown": true,
+      "survivesReload": true
+    },
+    "a11y.form": {
+      "hasUrlInput": true,
+      "scanButtonDisabledWhenEmpty": true,
+      "mentionsFixtureCommand": true
+    },
+    "a11y.refusals": {
+      "loopback": {
+        "url": "http://localhost:8080/a11y-demo",
+        "outcome": "unknown",
+        "message": null
+      },
+      "credentialsInUrl": {
+        "url": "https://user:pass@example.com/",
+        "outcome": "CREDENTIALS_IN_URL",
+        "message": "Remove the credentials from the URL — the scanner never sends a login. A refused or failed scan is recorded in the audit log and is never di"
+      },
+      "nonWebScheme": {
+        "url": "file:///etc/passwd",
+        "outcome": "UNSUPPORTED_SCHEME",
+        "message": "Only http and https URLs can be scanned, not file:. A refused or failed scan is recorded in the audit log and is never displayed as a page t"
+      },
+      "privateAddress": {
+        "url": "http://169.254.169.254/latest/meta-data/",
+        "outcome": "PRIVATE_ADDRESS",
+        "message": "Scanning a private, loopback or link-local address is refused. A refused or failed scan is recorded in the audit log and is never displayed "
+      },
+      "nonStandardPort": {
+        "url": "https://example.com:8443/",
+        "outcome": "PORT_NOT_ALLOWED",
+        "message": "Only the standard web ports are scanned (80/443); refused port 8443. A refused or failed scan is recorded in the audit log and is never disp"
+      }
+    },
+    "a11y.publicScanExampleCom": {
+      "completed": false,
+      "failingRules": null,
+      "failingElements": null,
+      "rulesPassed": null,
+      "undecided": null,
+      "limitationsListed": true
+    },
+    "a11y.detail": {
+      "url": "/accessibility/a11y_8abeef65f0694e6a",
+      "showsEngine": true,
+      "showsLimitations": true,
+      "failingRulesListed": true
+    },
+    "a11y.history": {
+      "rowsRecorded": 5,
+      "persistsAfterReload": true,
+      "separateFromCyber": true
+    }
+  },
+  "browserSource": "channel:chrome",
+  "launchFailures": [
+    "bundled-chromium: browserType.launch: Executable doesn't exist at C:\\Users\\BALAJI N\\AppData\\Local\\ms-playwright\\chromium_headless_shell-1243\\chrome-headless-shell-win64\\chrome-headless-shell.exe"
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 500 ()",
+    "%o"
+  ],
+  "finishedAt": "2026-10-14T13:22:58.806Z"
+}

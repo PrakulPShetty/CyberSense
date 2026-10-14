@@ -118,6 +118,10 @@ export function buildRisk(
     confidence,
     uncertainty,
     evidenceQuality,
+    // No modeled path means nothing was scored. Reporting the landscape floor
+    // (18 / LOW) for an empty twin reads as "this target is fine", which the
+    // evidence does not support.
+    insufficientEvidence: paths.length === 0,
     factors,
     pathBreakdowns: breakdowns,
     criticalPathCount: criticalPaths.length,
