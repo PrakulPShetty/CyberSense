@@ -1,4 +1,4 @@
-/** SENTINEL-X domain contracts. Engines, persistence, API, and UI share these types. */
+/** CyberSense domain contracts. Engines, persistence, API, and UI share these types. */
 
 export const ASSESSMENT_STATUSES = [
   "CREATED",
@@ -454,13 +454,13 @@ export interface MomentumComponent {
 }
 
 export interface ExposureMomentum {
-  /** SENTINEL-X project metric, not an industry standard. Positive = more dangerous. */
+  /** CyberSense project metric, not an industry standard. Positive = more dangerous. */
   score: number;
   direction: "DETERIORATING" | "STABLE" | "IMPROVING";
   components: MomentumComponent[];
   asOf: string;
   previousAssessmentId: string | null;
-  label: "SENTINEL-X Exposure Momentum";
+  label: "CyberSense Exposure Momentum";
 }
 
 export interface StageLogEntry {

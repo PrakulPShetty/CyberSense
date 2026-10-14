@@ -4,7 +4,7 @@ import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { QueryProvider } from "@/components/query-provider";
 import appCss from "../styles.css?url";
 
-const APP_NAME = "SENTINEL-X";
+const APP_NAME = "CyberSense";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -15,7 +15,7 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#09090b" },
       {
         name: "description",
-        content: "SENTINEL-X — evidence-backed cyber exposure twin with counterfactual defense optimization.",
+        content: "CyberSense — evidence-backed website scanning and analysis platform with genuine security checks, evidence-based results, and downloadable PDF reports.",
       },
     ],
     links: [

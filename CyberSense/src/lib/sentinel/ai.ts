@@ -2,7 +2,7 @@ import type { AIExplanation, ClaimKind, SimulationResult, TwinSnapshot } from ".
 import { CONTROL_CATALOG } from "./defense.ts";
 import { newId } from "./ids.ts";
 
-const SYSTEM = `You are the SENTINEL-X Decision Analyst.
+const SYSTEM = `You are the CyberSense Decision Analyst.
 You explain DETERMINISTIC cybersecurity analysis. You are NEVER the source of truth.
 Rules:
 - Use ONLY facts in the JSON context. Every claim must cite evidence_ids or path_ids from context.

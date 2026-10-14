@@ -12,9 +12,17 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as A11yDemoRouteImport } from './routes/a11y-demo'
 import { Route as AccessibilityRouteImport } from './routes/accessibility'
+import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as RecommendationsRouteImport } from './routes/recommendations'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as ResultsRouteImport } from './routes/results'
+import { Route as SecurityRouteImport } from './routes/security'
 import { Route as AccessibilityIndexRouteImport } from './routes/accessibility.index'
 import { Route as AccessibilityScanIdRouteImport } from './routes/accessibility.$scanId'
 import { Route as AssessmentsIdRouteImport } from './routes/assessments.$id'
+import { Route as SecurityIdRouteImport } from './routes/security.$id'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
 import { Route as ApiV1ReadyRouteImport } from './routes/api/v1/ready'
 import { Route as AssessmentsIdIndexRouteImport } from './routes/assessments.$id.index'
@@ -49,6 +57,41 @@ const AccessibilityRoute = AccessibilityRouteImport.update({
   path: '/accessibility',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecommendationsRoute = RecommendationsRouteImport.update({
+  id: '/recommendations',
+  path: '/recommendations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultsRoute = ResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityRoute = SecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccessibilityIndexRoute = AccessibilityIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -63,6 +106,11 @@ const AssessmentsIdRoute = AssessmentsIdRouteImport.update({
   id: '/assessments/$id',
   path: '/assessments/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityIdRoute = SecurityIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => SecurityRoute,
 } as any)
 const ApiV1HealthRoute = ApiV1HealthRouteImport.update({
   id: '/api/v1/health',
@@ -160,8 +208,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a11y-demo': typeof A11yDemoRoute
   '/accessibility': typeof AccessibilityRouteWithChildren
+  '/assistant': typeof AssistantRoute
+  '/dashboard': typeof DashboardRoute
+  '/history': typeof HistoryRoute
+  '/recommendations': typeof RecommendationsRoute
+  '/reports': typeof ReportsRoute
+  '/results': typeof ResultsRoute
+  '/security': typeof SecurityRouteWithChildren
   '/accessibility/$scanId': typeof AccessibilityScanIdRoute
   '/assessments/$id': typeof AssessmentsIdRouteWithChildren
+  '/security/$id': typeof SecurityIdRoute
   '/accessibility/': typeof AccessibilityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
@@ -185,7 +241,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a11y-demo': typeof A11yDemoRoute
+  '/assistant': typeof AssistantRoute
+  '/dashboard': typeof DashboardRoute
+  '/history': typeof HistoryRoute
+  '/recommendations': typeof RecommendationsRoute
+  '/reports': typeof ReportsRoute
+  '/results': typeof ResultsRoute
+  '/security': typeof SecurityRouteWithChildren
   '/accessibility/$scanId': typeof AccessibilityScanIdRoute
+  '/security/$id': typeof SecurityIdRoute
   '/accessibility': typeof AccessibilityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
@@ -211,8 +275,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/a11y-demo': typeof A11yDemoRoute
   '/accessibility': typeof AccessibilityRouteWithChildren
+  '/assistant': typeof AssistantRoute
+  '/dashboard': typeof DashboardRoute
+  '/history': typeof HistoryRoute
+  '/recommendations': typeof RecommendationsRoute
+  '/reports': typeof ReportsRoute
+  '/results': typeof ResultsRoute
+  '/security': typeof SecurityRouteWithChildren
   '/accessibility/$scanId': typeof AccessibilityScanIdRoute
   '/assessments/$id': typeof AssessmentsIdRouteWithChildren
+  '/security/$id': typeof SecurityIdRoute
   '/accessibility/': typeof AccessibilityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
@@ -239,8 +311,16 @@ export interface FileRouteTypes {
     | '/'
     | '/a11y-demo'
     | '/accessibility'
+    | '/assistant'
+    | '/dashboard'
+    | '/history'
+    | '/recommendations'
+    | '/reports'
+    | '/results'
+    | '/security'
     | '/accessibility/$scanId'
     | '/assessments/$id'
+    | '/security/$id'
     | '/accessibility/'
     | '/api/v1/health'
     | '/api/v1/ready'
@@ -264,7 +344,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/a11y-demo'
+    | '/assistant'
+    | '/dashboard'
+    | '/history'
+    | '/recommendations'
+    | '/reports'
+    | '/results'
+    | '/security'
     | '/accessibility/$scanId'
+    | '/security/$id'
     | '/accessibility'
     | '/api/v1/health'
     | '/api/v1/ready'
@@ -289,8 +377,16 @@ export interface FileRouteTypes {
     | '/'
     | '/a11y-demo'
     | '/accessibility'
+    | '/assistant'
+    | '/dashboard'
+    | '/history'
+    | '/recommendations'
+    | '/reports'
+    | '/results'
+    | '/security'
     | '/accessibility/$scanId'
     | '/assessments/$id'
+    | '/security/$id'
     | '/accessibility/'
     | '/api/v1/health'
     | '/api/v1/ready'
@@ -316,6 +412,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   A11yDemoRoute: typeof A11yDemoRoute
   AccessibilityRoute: typeof AccessibilityRouteWithChildren
+  AssistantRoute: typeof AssistantRoute
+  DashboardRoute: typeof DashboardRoute
+  HistoryRoute: typeof HistoryRoute
+  RecommendationsRoute: typeof RecommendationsRoute
+  ReportsRoute: typeof ReportsRoute
+  ResultsRoute: typeof ResultsRoute
+  SecurityRoute: typeof SecurityRouteWithChildren
   AssessmentsIdRoute: typeof AssessmentsIdRouteWithChildren
   ApiV1HealthRoute: typeof ApiV1HealthRoute
   ApiV1ReadyRoute: typeof ApiV1ReadyRoute
@@ -344,6 +447,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccessibilityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recommendations': {
+      id: '/recommendations'
+      path: '/recommendations'
+      fullPath: '/recommendations'
+      preLoaderRoute: typeof RecommendationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/results': {
+      id: '/results'
+      path: '/results'
+      fullPath: '/results'
+      preLoaderRoute: typeof ResultsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/security': {
+      id: '/security'
+      path: '/security'
+      fullPath: '/security'
+      preLoaderRoute: typeof SecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/accessibility/': {
       id: '/accessibility/'
       path: '/'
@@ -364,6 +516,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/assessments/$id'
       preLoaderRoute: typeof AssessmentsIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/security/$id': {
+      id: '/security/$id'
+      path: '/$id'
+      fullPath: '/security/$id'
+      preLoaderRoute: typeof SecurityIdRouteImport
+      parentRoute: typeof SecurityRoute
     }
     '/api/v1/health': {
       id: '/api/v1/health'
@@ -508,6 +667,18 @@ const AccessibilityRouteWithChildren = AccessibilityRoute._addFileChildren(
   AccessibilityRouteChildren,
 )
 
+interface SecurityRouteChildren {
+  SecurityIdRoute: typeof SecurityIdRoute
+}
+
+const SecurityRouteChildren: SecurityRouteChildren = {
+  SecurityIdRoute: SecurityIdRoute,
+}
+
+const SecurityRouteWithChildren = SecurityRoute._addFileChildren(
+  SecurityRouteChildren,
+)
+
 interface AssessmentsIdRouteChildren {
   AssessmentsIdAssetsRoute: typeof AssessmentsIdAssetsRoute
   AssessmentsIdAssistantRoute: typeof AssessmentsIdAssistantRoute
@@ -554,6 +725,13 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   A11yDemoRoute: A11yDemoRoute,
   AccessibilityRoute: AccessibilityRouteWithChildren,
+  AssistantRoute: AssistantRoute,
+  DashboardRoute: DashboardRoute,
+  HistoryRoute: HistoryRoute,
+  RecommendationsRoute: RecommendationsRoute,
+  ReportsRoute: ReportsRoute,
+  ResultsRoute: ResultsRoute,
+  SecurityRoute: SecurityRouteWithChildren,
   AssessmentsIdRoute: AssessmentsIdRouteWithChildren,
   ApiV1HealthRoute: ApiV1HealthRoute,
   ApiV1ReadyRoute: ApiV1ReadyRoute,

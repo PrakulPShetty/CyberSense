@@ -39,7 +39,7 @@ function OptimizePage() {
       <div>
         <h1 className="text-2xl font-medium tracking-tight">Minimum defense cut</h1>
         <p className="text-sm text-muted-foreground">
-          Bounded combinatorial search over the control catalog. Defense Efficiency = modeled risk reduction / estimated cost — a SENTINEL-X metric, not finance.
+          Bounded combinatorial search over the control catalog. Defense Efficiency = modeled risk reduction / estimated cost — a CyberSense project metric, not finance.
         </p>
       </div>
       <div className="grid gap-3 sm:grid-cols-3">

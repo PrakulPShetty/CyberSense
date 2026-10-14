@@ -348,7 +348,7 @@ export function optimizeDefense(args: {
   const top = scored.slice(0, 5);
   if (top[0]) {
     top[0].whySelected =
-      `Removes ${top[0].criticalPathsRemoved} critical modeled path(s) with residual risk ${top[0].residualRisk} at estimated cost ${top[0].totalCost}. Defense Efficiency is a SENTINEL-X project metric (risk reduction / estimated cost), not financial truth.`;
+      `Removes ${top[0].criticalPathsRemoved} critical modeled path(s) with residual risk ${top[0].residualRisk} at estimated cost ${top[0].totalCost}. Defense Efficiency is a CyberSense project metric (risk reduction / estimated cost), not financial truth.`;
   }
   for (let i = 1; i < top.length; i += 1) {
     top[i].whyRejected = `Alternative: fewer critical-path removals or weaker efficiency than ${top[0].name}.`;
