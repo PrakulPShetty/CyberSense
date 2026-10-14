@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { Accessibility, ArrowRight, Info, LoaderCircle, ScanSearch, ShieldCheck } from "lucide-react";
 import { useState } from "react";
@@ -22,9 +22,16 @@ function stamp(iso: string): string {
 
 function AccessibilityPage() {
   const initial = Route.useLoaderData();
+  const router = useRouter();
   const [url, setUrl] = useState("");
   const scan = useMutation({
     mutationFn: (target: string) => runA11yScanFn({ data: { url: target } }),
+    // A completed scan is persisted server-side, so the sibling lists on this route
+    // (history, compare selects) must be re-read — loader data is otherwise frozen
+    // at the moment of navigation and the new scan would appear to be missing.
+    onSuccess: (outcome) => {
+      if (outcome.ok) void router.invalidate();
+    },
   });
 
   const outcome = scan.data;

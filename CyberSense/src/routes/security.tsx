@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoaderCircle, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -21,8 +21,14 @@ const STATUS_STYLES: Record<string, string> = {
 
 function SecurityPage() {
   const [url, setUrl] = useState("");
+  const queryClient = useQueryClient();
   const run = useMutation<SecurityCheckRun, unknown, string, unknown>({
     mutationFn: (target: string) => runSecurityChecksFn({ data: { url: target } }),
+    // A saved run must show up in the sibling history panel immediately; the
+    // query is cached, so without this the list still reads "none saved yet".
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["security-checks"] });
+    },
   });
 
   const history = useQuery({

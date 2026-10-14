@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import { PrimaryShell } from "@/components/cybersense/primary-nav";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { compareA11yScansFn, listA11yScansFn } from "@/lib/a11y/api";
 import type { A11yScanListItem } from "@/lib/a11y/types";
 import { Severity } from "@/components/sentinel/severity";

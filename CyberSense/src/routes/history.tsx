@@ -12,6 +12,13 @@ export const Route = createFileRoute("/history")({
   component: HistoryPage,
 });
 
+/** UTC formatting only — a locale-dependent date would differ between server and client. */
+function stamp(iso: string): string {
+  const parsed = Date.parse(iso);
+  if (!Number.isFinite(parsed)) return iso;
+  return `${new Date(parsed).toISOString().replace("T", " ").slice(0, 19)} UTC`;
+}
+
 function HistoryPage() {
   const { scans } = Route.useLoaderData();
   const [baseId, setBaseId] = useState("");
@@ -93,7 +100,7 @@ function HistoryPage() {
               <div key={scan.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border/60 bg-navy-900/60 p-4">
                 <div className="min-w-0">
                   <Link className="text-sky-300 hover:underline" to="/accessibility/$scanId" params={{ scanId: scan.id }}>{scan.url}</Link>
-                  <p className="mt-1 font-mono text-xs text-muted-foreground">{scan.scannedAt} · {scan.summary.ruleCount} failing rules</p>
+                  <p className="mt-1 font-mono text-xs text-muted-foreground">{stamp(scan.scannedAt)} · {scan.summary.ruleCount} failing rules</p>
                 </div>
                 <div className="flex items-center gap-4 font-mono text-xs tabular text-muted-foreground">
                   <span className="text-rose-300">{scan.summary.ruleCount} rules</span>
