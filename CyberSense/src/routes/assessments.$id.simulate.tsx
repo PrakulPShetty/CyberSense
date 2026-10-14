@@ -29,7 +29,7 @@ function SimulatePage() {
   const beforeGraph = snap?.graph;
   const afterGraph = latest?.afterGraph;
   const view = useMemo(() => afterGraph ?? beforeGraph, [afterGraph, beforeGraph]);
-  if (!snap || !view) return null;
+  if (!snap) return null;
 
   return (
     <div className="flex flex-col gap-4">
