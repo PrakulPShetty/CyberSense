@@ -1,115 +1,191 @@
-import { Accessibility, BrainCircuit, Radar, ShieldCheck, Sparkles } from "lucide-react";
+import { Accessibility, ScanSearch, ShieldCheck, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 /**
- * Pure CSS/SVG hero visual: a glowing digital globe wrapped in orbital rings,
- * a protective accessibility shield, and four floating capability cards.
- * No 3D library — layered gradients, transforms and keyframe animations only.
+ * Hero visual.
+ *
+ * Pure CSS + inline SVG — no external images, no 3D library — so it renders
+ * identically offline during a demo. The floating cards describe what the
+ * platform actually does; they carry no numbers and assert nothing about a
+ * scanned site.
  */
-export function HeroGlobe() {
+const CAPABILITIES = [
+  {
+    label: "Website scanning",
+    detail: "Real browser render",
+    icon: ScanSearch,
+    position: "left-[2%] top-[16%]",
+    tone: "text-sky-300",
+    delay: "0s",
+  },
+  {
+    label: "Accessibility issues",
+    detail: "axe-core rule evidence",
+    icon: Accessibility,
+    position: "right-[0%] top-[36%]",
+    tone: "text-rose-300",
+    delay: "1.4s",
+  },
+  {
+    label: "Security checks",
+    detail: "Headers and TLS observed",
+    icon: ShieldCheck,
+    position: "left-[0%] bottom-[20%]",
+    tone: "text-cyan-300",
+    delay: "2.6s",
+  },
+  {
+    label: "AI insights",
+    detail: "Plain-language fixes",
+    icon: Sparkles,
+    position: "right-[4%] bottom-[10%]",
+    tone: "text-violet-300",
+    delay: "3.8s",
+  },
+] as const;
+
+export function HeroVisual() {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[520px]" role="img" aria-label="Glowing digital globe protected by an accessibility shield, with orbital rings and floating capability cards">
-      {/* Ambient glow */}
-      <div className="absolute inset-[8%] rounded-full bg-gradient-to-br from-sky-500/25 via-indigo-500/20 to-violet-500/25 blur-3xl animate-pulse-glow" aria-hidden="true" />
+    <div className="relative mx-auto aspect-square w-full max-w-[34rem]" aria-hidden="true">
+      {/* Atmospheric lighting */}
+      <div className="absolute inset-[6%] rounded-full bg-[radial-gradient(circle_at_50%_45%,rgba(59,130,246,0.34),transparent_66%)] blur-3xl" />
+      <div className="absolute inset-[20%] rounded-full bg-[radial-gradient(circle_at_62%_62%,rgba(139,92,246,0.3),transparent_70%)] blur-3xl" />
+      <div className="absolute inset-[30%] rounded-full bg-[radial-gradient(circle_at_40%_40%,rgba(34,211,238,0.22),transparent_72%)] blur-2xl" />
 
-      {/* Orbital rings */}
-      <div className="absolute inset-0 animate-spin-slow" aria-hidden="true">
-        <div className="absolute left-1/2 top-1/2 h-[92%] w-[92%] -translate-x-1/2 -translate-y-1/2">
-          <div className="h-full w-full rounded-full border border-sky-400/25 [transform:rotateX(72deg)]" />
-        </div>
-      </div>
-      <div className="absolute inset-0" aria-hidden="true">
-        <div
-          className="h-full w-full rounded-full border border-violet-400/20 [transform:rotateX(72deg)_rotateY(38deg)]"
-          style={{ animation: "orbit-rev 26s linear infinite" }}
-        />
+      {/* Starfield / dot grid */}
+      <div className="dot-grid absolute inset-0 opacity-40 [mask-image:radial-gradient(circle_at_50%_50%,black,transparent_70%)]" />
+
+      {/* Globe, orbital rings and grid */}
+      <svg viewBox="0 0 400 400" className="absolute inset-0 size-full">
+        <defs>
+          <radialGradient id="globe-fill" cx="38%" cy="32%" r="72%">
+            <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0.55" />
+            <stop offset="45%" stopColor="#1e3a8a" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#050b1e" stopOpacity="0.95" />
+          </radialGradient>
+          <linearGradient id="ring-a" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.85" />
+            <stop offset="50%" stopColor="#22d3ee" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.7" />
+          </linearGradient>
+          <linearGradient id="ring-b" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.75" />
+            <stop offset="60%" stopColor="#38bdf8" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.6" />
+          </linearGradient>
+          <clipPath id="globe-clip">
+            <circle cx="200" cy="200" r="112" />
+          </clipPath>
+        </defs>
+
+        {/* Globe body */}
+        <circle cx="200" cy="200" r="112" fill="url(#globe-fill)" />
+        <g clipPath="url(#globe-clip)" fill="none" stroke="rgba(125,211,252,0.34)" strokeWidth="0.9">
+          <circle cx="200" cy="200" r="112" />
+          <ellipse cx="200" cy="200" rx="76" ry="112" />
+          <ellipse cx="200" cy="200" rx="38" ry="112" />
+          <line x1="200" y1="88" x2="200" y2="312" />
+          <ellipse cx="200" cy="200" rx="112" ry="38" />
+          <ellipse cx="200" cy="200" rx="112" ry="76" />
+          <line x1="88" y1="200" x2="312" y2="200" />
+        </g>
+
+        {/* Node glints on the globe */}
+        <g fill="#7dd3fc">
+          <circle cx="150" cy="150" r="2.4" opacity="0.9" />
+          <circle cx="262" cy="176" r="2" opacity="0.8" />
+          <circle cx="196" cy="262" r="2.2" opacity="0.85" />
+          <circle cx="238" cy="252" r="1.6" opacity="0.7" />
+        </g>
+
+        {/* Rotating orbital rings */}
+        <g className="animate-spin-slow" style={{ transformOrigin: "200px 200px" }}>
+          <ellipse
+            cx="200"
+            cy="200"
+            rx="172"
+            ry="58"
+            fill="none"
+            stroke="url(#ring-a)"
+            strokeWidth="1.4"
+            transform="rotate(-20 200 200)"
+          />
+          <circle cx="372" cy="200" r="3.4" fill="#7dd3fc" />
+        </g>
+        <g className="animate-orbit-rev" style={{ transformOrigin: "200px 200px" }}>
+          <ellipse
+            cx="200"
+            cy="200"
+            rx="150"
+            ry="112"
+            fill="none"
+            stroke="url(#ring-b)"
+            strokeWidth="1"
+            strokeDasharray="5 7"
+            transform="rotate(28 200 200)"
+          />
+          <circle cx="50" cy="200" r="3" fill="#c4b5fd" />
+        </g>
+      </svg>
+
+      {/* Scanning sweep across the globe */}
+      <div className="pointer-events-none absolute inset-[24%] overflow-hidden rounded-full" aria-hidden="true">
+        <span className="absolute inset-x-0 h-14 animate-scan bg-gradient-to-b from-transparent via-cyan-300/35 to-transparent blur-[2px]" />
       </div>
 
-      {/* Globe */}
-      <div className="absolute inset-[14%] overflow-hidden rounded-full bg-[radial-gradient(circle_at_32%_28%,rgba(125,211,252,0.5),rgba(37,99,235,0.38)_38%,rgba(49,46,129,0.55)_68%,rgba(10,15,36,0.95))] shadow-[0_0_80px_rgba(56,189,248,0.35),inset_0_0_60px_rgba(2,6,23,0.8)] ring-1 ring-sky-300/30">
-        {/* Latitude/longitude grid */}
-        <svg viewBox="0 0 200 200" className="absolute inset-0 h-full w-full opacity-50" aria-hidden="true">
-          <defs>
-            <radialGradient id="globe-fade" cx="35%" cy="30%" r="80%">
-              <stop offset="0%" stopColor="rgba(186,230,253,0.35)" />
-              <stop offset="100%" stopColor="rgba(2,6,23,0)" />
-            </radialGradient>
-          </defs>
-          <rect width="200" height="200" fill="url(#globe-fade)" />
-          <g stroke="rgba(125,211,252,0.4)" strokeWidth="0.7" fill="none">
-            <ellipse cx="100" cy="100" rx="96" ry="34" />
-            <ellipse cx="100" cy="100" rx="96" ry="68" />
-            <ellipse cx="100" cy="100" rx="96" ry="96" />
-            <ellipse cx="100" cy="100" rx="34" ry="96" />
-            <ellipse cx="100" cy="100" rx="68" ry="96" />
-            <ellipse cx="100" cy="100" rx="14" ry="96" />
-            <ellipse cx="100" cy="100" rx="14" ry="96" transform="rotate(60 100 100)" />
-            <ellipse cx="100" cy="100" rx="14" ry="96" transform="rotate(120 100 100)" />
-            <line x1="4" y1="100" x2="196" y2="100" />
-            <line x1="100" y1="4" x2="100" y2="196" />
-          </g>
-          {/* Continent-ish landmasses */}
-          <g fill="rgba(34,211,238,0.28)" stroke="rgba(125,211,252,0.35)" strokeWidth="0.6">
-            <path d="M52 62 Q70 48 88 60 Q96 74 84 88 Q64 96 52 84 Q44 72 52 62 Z" />
-            <path d="M118 52 Q138 46 150 60 Q154 76 138 84 Q120 86 114 72 Q112 60 118 52 Z" />
-            <path d="M64 118 Q84 108 98 120 Q104 136 88 148 Q68 152 58 138 Q54 126 64 118 Z" />
-            <path d="M130 116 Q146 110 154 124 Q156 140 140 146 Q126 146 122 132 Q122 122 130 116 Z" />
-            <path d="M96 150 Q112 146 120 156 Q122 170 106 176 Q92 174 88 162 Q90 154 96 150 Z" />
-          </g>
-        </svg>
-        {/* Specular highlight */}
-        <div className="absolute left-[18%] top-[10%] h-[30%] w-[42%] rounded-full bg-gradient-to-br from-white/25 to-transparent blur-md" aria-hidden="true" />
-      </div>
-
-      {/* Protective shield */}
-      <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
-        <div className="relative flex size-20 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 via-blue-500 to-violet-500 shadow-[0_0_50px_rgba(56,189,248,0.55)] ring-1 ring-sky-200/50 sm:size-24">
-          <ShieldCheck className="size-10 text-white drop-shadow-[0_2px_8px_rgba(2,6,23,0.6)] sm:size-12" aria-hidden="true" />
-          <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-cyan-300 ring-2 ring-navy-950">
-            <Accessibility className="size-3 text-navy-950" aria-hidden="true" />
+      {/* Protective shield containing the accessibility symbol */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="relative flex size-[9.5rem] items-center justify-center">
+          <svg viewBox="0 0 100 122" className="absolute inset-0 size-full drop-shadow-[0_14px_36px_rgba(56,189,248,0.35)]">
+            <defs>
+              <linearGradient id="shield-fill" x1="0" y1="0" x2="0.4" y2="1">
+                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.55" />
+                <stop offset="55%" stopColor="#2563eb" stopOpacity="0.35" />
+                <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.45" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M50 2 L96 20 V60 C96 88 75 107 50 120 C25 107 4 88 4 60 V20 Z"
+              fill="url(#shield-fill)"
+              stroke="rgba(148,197,255,0.6)"
+              strokeWidth="1.5"
+            />
+            <path
+              d="M50 10 L88 25 V60 C88 83 70 98 50 109 C30 98 12 83 12 60 V25 Z"
+              fill="rgba(5,7,15,0.62)"
+              stroke="rgba(148,197,255,0.35)"
+              strokeWidth="0.8"
+            />
+          </svg>
+          <span className="absolute inset-0 animate-pulse-ring rounded-full bg-sky-300/10" />
+          <span className="relative flex flex-col items-center gap-1.5">
+            <Accessibility className="size-12 text-sky-100" />
+            <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-sky-200/90">Accessible</span>
           </span>
         </div>
       </div>
 
       {/* Floating capability cards */}
-      <FloatingCard className="left-0 top-[16%] animate-float" icon={<Radar className="size-4 text-sky-300" aria-hidden="true" />} label="Website Scanning" tone="sky" />
-      <FloatingCard className="right-0 top-[30%] animate-float-slow" icon={<Accessibility className="size-4 text-cyan-300" aria-hidden="true" />} label="Accessibility" tone="cyan" delay="0.8s" />
-      <FloatingCard className="bottom-[24%] left-[4%] animate-float-slow" icon={<ShieldCheck className="size-4 text-violet-300" aria-hidden="true" />} label="Security" tone="violet" delay="1.6s" />
-      <FloatingCard className="bottom-[12%] right-[6%] animate-float" icon={<BrainCircuit className="size-4 text-indigo-300" aria-hidden="true" />} label="AI Insights" tone="indigo" delay="0.4s" />
-
-      {/* Sparkles */}
-      <Sparkles className="absolute right-[18%] top-[8%] size-4 text-cyan-300/70 animate-pulse-glow" aria-hidden="true" />
-      <Sparkles className="absolute bottom-[16%] left-[22%] size-3 text-violet-300/70 animate-pulse-glow [animation-delay:1.2s]" aria-hidden="true" />
-    </div>
-  );
-}
-
-const TONES: Record<string, string> = {
-  sky: "text-sky-300 ring-sky-400/30 bg-sky-500/10",
-  cyan: "text-cyan-300 ring-cyan-400/30 bg-cyan-500/10",
-  violet: "text-violet-300 ring-violet-400/30 bg-violet-500/10",
-  indigo: "text-indigo-300 ring-indigo-400/30 bg-indigo-500/10",
-};
-
-function FloatingCard({
-  className,
-  icon,
-  label,
-  tone,
-  delay,
-}: {
-  className?: string;
-  icon: React.ReactNode;
-  label: string;
-  tone: keyof typeof TONES;
-  delay?: string;
-}) {
-  return (
-    <div
-      className={`glass absolute flex items-center gap-2 rounded-xl px-3 py-2 shadow-[0_10px_30px_rgba(2,6,23,0.5)] ${className ?? ""}`}
-      style={delay ? { animationDelay: delay } : undefined}
-    >
-      <span className={`flex size-7 items-center justify-center rounded-lg ring-1 ${TONES[tone]}`}>{icon}</span>
-      <span className="whitespace-nowrap text-xs font-medium tracking-wide text-slate-200">{label}</span>
+      {CAPABILITIES.map((cap, index) => {
+        const Icon = cap.icon;
+        return (
+          <div
+            key={cap.label}
+            className={cn(
+              "glass animate-float absolute w-40 rounded-2xl px-3.5 py-3 shadow-[0_16px_40px_rgba(2,6,23,0.6)]",
+              cap.position,
+              index > 1 && "hidden sm:block",
+            )}
+            style={{ animationDelay: cap.delay }}
+          >
+            <div className="flex items-center gap-2">
+              <Icon className={cn("size-3.5 shrink-0", cap.tone)} />
+              <span className="truncate text-[11px] font-semibold text-slate-100">{cap.label}</span>
+            </div>
+            <p className="mt-1 text-[10px] leading-snug text-slate-400">{cap.detail}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

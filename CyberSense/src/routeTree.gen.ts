@@ -22,6 +22,7 @@ import { Route as SecurityRouteImport } from './routes/security'
 import { Route as AccessibilityIndexRouteImport } from './routes/accessibility.index'
 import { Route as AccessibilityScanIdRouteImport } from './routes/accessibility.$scanId'
 import { Route as AssessmentsIdRouteImport } from './routes/assessments.$id'
+import { Route as SecurityIndexRouteImport } from './routes/security.index'
 import { Route as SecurityIdRouteImport } from './routes/security.$id'
 import { Route as ApiV1HealthRouteImport } from './routes/api/v1/health'
 import { Route as ApiV1ReadyRouteImport } from './routes/api/v1/ready'
@@ -106,6 +107,11 @@ const AssessmentsIdRoute = AssessmentsIdRouteImport.update({
   id: '/assessments/$id',
   path: '/assessments/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SecurityIndexRoute = SecurityIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SecurityRoute,
 } as any)
 const SecurityIdRoute = SecurityIdRouteImport.update({
   id: '/$id',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/assessments/$id': typeof AssessmentsIdRouteWithChildren
   '/security/$id': typeof SecurityIdRoute
   '/accessibility/': typeof AccessibilityIndexRoute
+  '/security/': typeof SecurityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
   '/assessments/$id/assets': typeof AssessmentsIdAssetsRoute
@@ -247,10 +254,10 @@ export interface FileRoutesByTo {
   '/recommendations': typeof RecommendationsRoute
   '/reports': typeof ReportsRoute
   '/results': typeof ResultsRoute
-  '/security': typeof SecurityRouteWithChildren
   '/accessibility/$scanId': typeof AccessibilityScanIdRoute
   '/security/$id': typeof SecurityIdRoute
   '/accessibility': typeof AccessibilityIndexRoute
+  '/security': typeof SecurityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
   '/assessments/$id/assets': typeof AssessmentsIdAssetsRoute
@@ -286,6 +293,7 @@ export interface FileRoutesById {
   '/assessments/$id': typeof AssessmentsIdRouteWithChildren
   '/security/$id': typeof SecurityIdRoute
   '/accessibility/': typeof AccessibilityIndexRoute
+  '/security/': typeof SecurityIndexRoute
   '/api/v1/health': typeof ApiV1HealthRoute
   '/api/v1/ready': typeof ApiV1ReadyRoute
   '/assessments/$id/assets': typeof AssessmentsIdAssetsRoute
@@ -322,6 +330,7 @@ export interface FileRouteTypes {
     | '/assessments/$id'
     | '/security/$id'
     | '/accessibility/'
+    | '/security/'
     | '/api/v1/health'
     | '/api/v1/ready'
     | '/assessments/$id/assets'
@@ -350,10 +359,10 @@ export interface FileRouteTypes {
     | '/recommendations'
     | '/reports'
     | '/results'
-    | '/security'
     | '/accessibility/$scanId'
     | '/security/$id'
     | '/accessibility'
+    | '/security'
     | '/api/v1/health'
     | '/api/v1/ready'
     | '/assessments/$id/assets'
@@ -388,6 +397,7 @@ export interface FileRouteTypes {
     | '/assessments/$id'
     | '/security/$id'
     | '/accessibility/'
+    | '/security/'
     | '/api/v1/health'
     | '/api/v1/ready'
     | '/assessments/$id/assets'
@@ -516,6 +526,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/assessments/$id'
       preLoaderRoute: typeof AssessmentsIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/security/': {
+      id: '/security/'
+      path: '/'
+      fullPath: '/security/'
+      preLoaderRoute: typeof SecurityIndexRouteImport
+      parentRoute: typeof SecurityRoute
     }
     '/security/$id': {
       id: '/security/$id'
@@ -669,10 +686,12 @@ const AccessibilityRouteWithChildren = AccessibilityRoute._addFileChildren(
 
 interface SecurityRouteChildren {
   SecurityIdRoute: typeof SecurityIdRoute
+  SecurityIndexRoute: typeof SecurityIndexRoute
 }
 
 const SecurityRouteChildren: SecurityRouteChildren = {
   SecurityIdRoute: SecurityIdRoute,
+  SecurityIndexRoute: SecurityIndexRoute,
 }
 
 const SecurityRouteWithChildren = SecurityRoute._addFileChildren(

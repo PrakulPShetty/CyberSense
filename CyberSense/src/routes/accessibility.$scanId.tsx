@@ -1,10 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft, ExternalLink, FileText, LoaderCircle, MessageSquareText } from "lucide-react";
-import { useState } from "react";
+import {
+  ArrowLeft,
+  ChevronDown,
+  ExternalLink,
+  FileText,
+  Filter,
+  LoaderCircle,
+  MessageSquareText,
+  Search,
+  ShieldCheck,
+} from "lucide-react";
+import { useMemo, useState } from "react";
+import { AppShell } from "@/components/cybersense/app-shell";
 import { Severity } from "@/components/sentinel/severity";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel, PanelBody, PanelHeader, PanelTitle, StatTile } from "@/components/ui/panel";
+import { EmptyState } from "@/components/ui/states";
 import { a11yRecommendationsFn, explainA11yFindingFn, generateA11yReportFn, getA11yScanFn } from "@/lib/a11y/api";
 import type { A11yImpact, A11yRuleResult } from "@/lib/a11y/types";
 
@@ -27,8 +41,10 @@ function stamp(iso: string): string {
 
 function ScanDetail() {
   const { scan, recommendations } = Route.useLoaderData();
-
   const [selectedFinding, setSelectedFinding] = useState<string | undefined>(scan?.violations[0]?.id);
+  const [query, setQuery] = useState("");
+  const [impactFilter, setImpactFilter] = useState<string>("all");
+
   const explain = useMutation({
     mutationFn: () => explainA11yFindingFn({ data: { scanId: scan?.id ?? "", findingId: selectedFinding } }),
   });
@@ -50,262 +66,462 @@ function ScanDetail() {
     },
   });
 
+  const violations = useMemo(() => scan?.violations ?? [], [scan]);
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return violations.filter((rule) => {
+      const matchesImpact = impactFilter === "all" || (rule.impact ?? "unknown") === impactFilter;
+      if (!matchesImpact) return false;
+      if (!needle) return true;
+      return (
+        rule.id.toLowerCase().includes(needle) ||
+        rule.help.toLowerCase().includes(needle) ||
+        rule.description.toLowerCase().includes(needle) ||
+        rule.nodes.some((node) => node.target.join(" ").toLowerCase().includes(needle))
+      );
+    });
+  }, [violations, query, impactFilter]);
+
   if (!scan) {
     return (
-      <div className="mx-auto max-w-5xl px-6 py-8">
-        <h1 className="text-2xl font-medium tracking-tight">Scan not found</h1>
-        <p className="mt-2 text-sm text-muted-foreground">No accessibility scan is stored under that id.</p>
-        <Link to="/accessibility" className="mt-4 inline-block text-xs uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground">
-          Back to the scanner
-        </Link>
-      </div>
+      <AppShell>
+        <PageHeader eyebrow="Scan results" title="Scan not found" description="No accessibility scan is stored under that identifier." />
+        <Panel className="mt-8">
+          <EmptyState
+            title="Nothing to show for this identifier"
+            body="The scan may have been created in a previous server session. In the current session the embedded database starts empty, so only scans run since the server started are stored."
+            action={
+              <Button asChild variant="primary" size="sm">
+                <Link to="/accessibility">Run a new scan</Link>
+              </Button>
+            }
+          />
+        </Panel>
+      </AppShell>
     );
   }
 
   const grouped = new Map<A11yImpact | "unknown", A11yRuleResult[]>();
-  for (const v of scan.violations) {
-    const key = v.impact ?? "unknown";
-    grouped.set(key, [...(grouped.get(key) ?? []), v]);
+  for (const rule of filtered) {
+    const key = rule.impact ?? "unknown";
+    grouped.set(key, [...(grouped.get(key) ?? []), rule]);
   }
 
   return (
-    <div className="min-h-dvh bg-navy-950 text-slate-100">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6">
-        <Link
-          to="/accessibility"
-          className="inline-flex w-fit items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-sky-300"
-        >
-          <ArrowLeft className="size-3.5" aria-hidden="true" />
-          All accessibility scans
-        </Link>
+    <AppShell>
+      <Link
+        to="/results"
+        className="inline-flex w-fit items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-sky-300"
+      >
+        <ArrowLeft className="size-3.5" aria-hidden="true" />
+        All scan results
+      </Link>
 
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{scan.page.title || scan.hostname}</h1>
-          <p className="mt-1 font-mono text-xs text-muted-foreground">{scan.page.finalUrl}</p>
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      <PageHeader
+        className="mt-5"
+        eyebrow="Scan results"
+        title={scan.page.title || scan.hostname}
+        description={
+          <span className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
             <Severity value={scan.status} />
-            <span>Scanned {stamp(scan.scannedAt)}</span>
-            <span>·</span>
-            <span>{scan.engine}</span>
-            <span>·</span>
-            <span>viewport {scan.page.viewport}</span>
-            <span>·</span>
-            <span>lang {scan.page.lang ?? "(not set)"}</span>
-            <span>·</span>
-            <span>{scan.page.elementCount} elements</span>
-            <span>·</span>
-            <span>{scan.page.loadMs} ms</span>
-          </div>
-        </div>
+            <span className="break-all font-mono text-xs text-sky-200">{scan.page.finalUrl}</span>
+            <span className="text-xs text-muted-foreground">
+              Scanned {stamp(scan.scannedAt)} · {scan.engine} · viewport {scan.page.viewport} · lang{" "}
+              {scan.page.lang ?? "(not set)"} · {scan.page.elementCount} elements · {scan.page.loadMs} ms
+            </span>
+          </span>
+        }
+        actions={
+          <>
+            <Button variant="primary" size="sm" onClick={() => pdf.mutate()} disabled={pdf.isPending}>
+              {pdf.isPending ? (
+                <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <FileText className="size-3.5" aria-hidden="true" />
+              )}
+              {pdf.isPending ? "Generating…" : "Download PDF report"}
+            </Button>
+            <Button asChild variant="ghostNeon" size="sm">
+              <Link to="/recommendations">Fix recommendations</Link>
+            </Button>
+          </>
+        }
+      />
 
-        <div className="grid gap-4 sm:grid-cols-4">
-          <Stat label="Failing rules" value={scan.summary.ruleCount} />
-          <Stat label="Failing elements" value={scan.summary.elementCount} />
-          <Stat label="Rules passed" value={scan.summary.passCount} />
-          <Stat label="Undecided rules" value={scan.summary.incompleteCount} />
-        </div>
+      <div className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatTile label="Failing rules" value={scan.summary.ruleCount} tone={scan.summary.ruleCount > 0 ? "critical" : "default"} />
+        <StatTile label="Failing elements" value={scan.summary.elementCount} />
+        <StatTile label="Rules passed" value={scan.summary.passCount} tone="low" />
+        <StatTile label="Undecided rules" value={scan.summary.incompleteCount} tone="high" />
+      </div>
 
-        {scan.summary.truncated && (
-          <p className="text-xs text-high">
-            The stored finding list was capped; the counts above are the full totals.
-          </p>
-        )}
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <span className="font-mono text-[11px] text-muted-foreground">Scan ID: {scan.id}</span>
+        <span className="text-[11px] text-muted-foreground">
+          Findings stored: {violations.length}
+          {scan.summary.truncated ? " (the stored list was capped — the counts above are the full totals)" : ""}
+        </span>
+      </div>
 
-        {Object.keys(scan.summary.byWcagTag).length > 0 && (
-          <div className="card-neon rounded-2xl p-5">
-            <h2 className="text-sm font-semibold tracking-tight">WCAG tags on the failing rules</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
+      {Object.keys(scan.summary.byWcagTag).length > 0 ? (
+        <Panel className="mt-5">
+          <PanelHeader>
+            <PanelTitle icon={<ShieldCheck className="size-4 text-sky-300" aria-hidden="true" />}>
+              WCAG tags on the failing rules
+            </PanelTitle>
+          </PanelHeader>
+          <PanelBody>
+            <div className="flex flex-wrap gap-2">
               {Object.entries(scan.summary.byWcagTag).map(([tag, count]) => (
-                <span key={tag} className="rounded-full border border-sky-400/20 bg-sky-500/10 px-2.5 py-1 font-mono text-[11px] text-sky-200">
+                <span
+                  key={tag}
+                  className="rounded-full border border-sky-400/20 bg-sky-500/10 px-2.5 py-1 font-mono text-[11px] text-sky-200"
+                >
                   {tag} × {count}
                 </span>
               ))}
             </div>
-          </div>
-        )}
+          </PanelBody>
+        </Panel>
+      ) : null}
 
-        {scan.summary.ruleCount === 0 && (
-          <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/10 p-5">
-            <p className="text-sm text-emerald-200">
+      {scan.summary.ruleCount === 0 ? (
+        <Panel className="mt-5 border-emerald-400/25 bg-emerald-500/10">
+          <PanelBody className="pt-5">
+            <p className="text-sm leading-relaxed text-emerald-100">
               axe-core reported no failing rule in the scanned tag set for this page, at this viewport, in this state. It
               confirms those rules did not fail here — not that the page is WCAG compliant.
             </p>
-          </div>
-        )}
+          </PanelBody>
+        </Panel>
+      ) : null}
 
-        {IMPACT_ORDER.filter((k) => grouped.has(k)).map((impact) => (
-          <section key={impact} className="flex flex-col gap-3">
-            <h2 className="flex items-center gap-2 text-sm font-medium">
-              <Severity value={impact} />
-              {grouped.get(impact)!.length} rule(s)
-            </h2>
-            {grouped.get(impact)!.map((rule) => (
-              <div key={rule.id} className="card-neon rounded-2xl p-5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-sm text-sky-300">{rule.id}</span>
-                  <span className="text-muted-foreground">·</span>
-                  <span className="text-sm font-medium text-slate-100">{rule.help}</span>
-                </div>
-                <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{rule.description}</p>
-                <div className="mt-3 flex flex-wrap items-center gap-2">
-                  {rule.wcagCriteria.map((c) => (
-                    <span key={c} className="rounded-full border border-sky-400/20 bg-sky-500/10 px-2 py-0.5 font-mono text-[10px] text-sky-200">
-                      {c}
-                    </span>
-                  ))}
-                  <span className="text-[11px] text-muted-foreground">
-                    {rule.nodeCount} failing element(s)
-                    {rule.nodes.length < rule.nodeCount ? ` — first ${rule.nodes.length} shown` : ""}
-                  </span>
-                  {rule.helpUrl && (
-                    <a
-                      href={rule.helpUrl}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="inline-flex items-center gap-1 text-[11px] text-medium hover:underline"
-                    >
-                      Remediation guidance
-                      <ExternalLink className="size-3" aria-hidden="true" />
-                    </a>
-                  )}
-                </div>
-                <div className="mt-4 flex flex-col gap-2.5">
-                  {rule.nodes.map((node, index) => (
-                    <div key={`${rule.id}-${index}`} className="rounded-lg border border-border/60 bg-navy-900/60 p-3">
-                      <div className="font-mono text-[11px] text-sky-200">{node.target.join(" ")}</div>
-                      {node.html && (
-                        <pre className="mt-1 overflow-x-auto text-[11px] text-muted-foreground">
-                          <code>{node.html}</code>
-                        </pre>
-                      )}
-                      {node.failureSummary && (
-                        <p className="mt-1 whitespace-pre-wrap text-[11px] leading-relaxed text-muted-foreground">{node.failureSummary}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
+      {/* Findings */}
+      {violations.length > 0 ? (
+        <section className="mt-8" aria-labelledby="findings-heading">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 id="findings-heading" className="text-lg font-semibold tracking-tight text-slate-100">
+                Findings
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Grouped by axe-core impact. Expand a row to see the stored element evidence.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-slate-500" aria-hidden="true" />
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search rules or selectors"
+                  aria-label="Search findings"
+                  className="h-10 w-full bg-navy-950/70 pl-9 text-xs sm:w-64"
+                />
               </div>
-            ))}
-          </section>
-        ))}
-
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="card-neon rounded-2xl p-5">
-            <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-              <FileText className="size-4 text-cyan-300" aria-hidden="true" />
-              PDF report
-            </h2>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Generate a downloadable PDF for this saved scan, including counts, evidence, and limitations.
-            </p>
-            <Button variant="primary" size="sm" className="mt-3" onClick={() => pdf.mutate()} disabled={pdf.isPending}>
-              {pdf.isPending ? <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" /> : <FileText className="size-3.5" aria-hidden="true" />}
-              {pdf.isPending ? "Generating PDF..." : "Download PDF report"}
-            </Button>
-          </div>
-
-          <div className="card-neon rounded-2xl p-5">
-            <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-              <MessageSquareText className="size-4 text-violet-300" aria-hidden="true" />
-              AI Assistant (simple academic English)
-            </h2>
-            <div className="mt-3 flex flex-col gap-3">
-              {scan.violations.length > 0 && (
-                <div className="flex flex-wrap gap-2" role="group" aria-label="Select a finding to explain">
-                  {scan.violations.map((v) => (
-                    <button
-                      key={v.id}
-                      type="button"
-                      aria-pressed={selectedFinding === v.id}
-                      className={`rounded-full px-3 py-1 font-mono text-xs transition-colors ${
-                        selectedFinding === v.id
-                          ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white"
-                          : "border border-border text-muted-foreground hover:border-sky-400/40 hover:text-sky-200"
-                      }`}
-                      onClick={() => setSelectedFinding(v.id)}
-                    >
-                      {v.id}
-                    </button>
+              <div className="flex items-center gap-2">
+                <Filter className="size-3.5 text-slate-500" aria-hidden="true" />
+                <select
+                  value={impactFilter}
+                  onChange={(e) => setImpactFilter(e.target.value)}
+                  aria-label="Filter findings by impact"
+                  className="h-10 rounded-xl border border-border bg-navy-950/70 px-3 text-xs text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                >
+                  <option value="all">All impacts</option>
+                  {IMPACT_ORDER.map((impact) => (
+                    <option key={impact} value={impact}>
+                      {impact}
+                    </option>
                   ))}
-                </div>
-              )}
-              <Button type="button" variant="ghostNeon" size="sm" onClick={() => explain.mutate()} disabled={explain.isPending || (!scan.violations.length && !scan.incomplete.length)} className="w-fit">
-                {explain.isPending ? "Explaining..." : "Explain selected finding"}
-              </Button>
-              {explain.data && (
-                <div className="flex flex-col gap-2 rounded-lg border border-border/60 bg-navy-900/60 p-4 text-sm">
-                  <p><span className="font-medium text-sky-200">What is the problem? </span>{explain.data.what}</p>
-                  <p><span className="font-medium text-sky-200">Why does it matter? </span>{explain.data.why}</p>
-                  <p><span className="font-medium text-sky-200">Who is affected? </span>{explain.data.who}</p>
-                  <div><span className="font-medium text-sky-200">What needs to be done?</span><ol className="mt-1 list-decimal pl-5 text-slate-300">{explain.data.steps.map((s, i) => <li key={i}>{s}</li>)}</ol></div>
-                  <p><span className="font-medium text-sky-200">Example fix: </span><code className="font-mono text-xs">{explain.data.example}</code></p>
-                  <p><span className="font-medium text-sky-200">Where to apply: </span>{explain.data.where}</p>
-                  <p><span className="font-medium text-sky-200">How to verify: </span>{explain.data.verify}</p>
-                </div>
-              )}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
 
-        {recommendations && recommendations.length > 0 && (
-          <div className="card-neon rounded-2xl p-5">
-            <h2 className="text-sm font-semibold tracking-tight">Fix recommendations</h2>
-            <div className="mt-3 flex flex-col gap-3">
-              {recommendations.map((r) => (
-                <div key={r.findingId} className="rounded-lg border border-border/60 bg-navy-900/60 p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-mono text-sm text-sky-300">{r.findingId}</span>
-                    <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-violet-300">Priority {r.priority}</span>
-                  </div>
-                  <p className="mt-1.5 text-sm text-slate-200">{r.problem}</p>
-                  <ol className="mt-2 list-decimal pl-5 text-xs leading-relaxed text-muted-foreground">
+          <div className="mt-5 flex flex-col gap-6">
+            {IMPACT_ORDER.filter((k) => grouped.has(k)).map((impact) => (
+              <div key={impact} className="flex flex-col gap-3">
+                <h3 className="flex items-center gap-2.5 text-sm font-medium text-slate-200">
+                  <Severity value={impact} />
+                  {grouped.get(impact)!.length} rule(s)
+                </h3>
+                {grouped.get(impact)!.map((rule) => (
+                  <Panel key={rule.id}>
+                    <PanelHeader>
+                      <div className="min-w-0">
+                        <PanelTitle className="font-mono text-sm text-sky-300">{rule.id}</PanelTitle>
+                        <p className="mt-1.5 text-sm font-medium text-slate-100">{rule.help}</p>
+                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{rule.description}</p>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        <span className="font-mono text-[11px] text-muted-foreground">
+                          {rule.nodeCount} failing element(s)
+                          {rule.nodes.length < rule.nodeCount ? ` — first ${rule.nodes.length} shown` : ""}
+                        </span>
+                        {rule.helpUrl ? (
+                          <a
+                            href={rule.helpUrl}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="inline-flex items-center gap-1 text-[11px] text-sky-300 hover:underline"
+                          >
+                            Remediation guidance
+                            <ExternalLink className="size-3" aria-hidden="true" />
+                          </a>
+                        ) : null}
+                      </div>
+                    </PanelHeader>
+                    <PanelBody>
+                      <div className="flex flex-wrap gap-2">
+                        {rule.wcagCriteria.map((c) => (
+                          <span
+                            key={c}
+                            className="rounded-full border border-sky-400/20 bg-sky-500/10 px-2 py-0.5 font-mono text-[10px] text-sky-200"
+                          >
+                            {c}
+                          </span>
+                        ))}
+                      </div>
+
+                      {rule.nodes.length > 0 ? (
+                        <details className="group mt-4" open={rule.nodes.length === 1}>
+                          <summary className="flex cursor-pointer items-center gap-2 rounded-xl border border-sky-400/10 bg-navy-950/50 px-3.5 py-2.5 text-xs font-medium text-slate-200 transition-colors hover:border-sky-400/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400">
+                            <ChevronDown className="size-3.5 transition-transform group-open:rotate-180" aria-hidden="true" />
+                            Show element evidence ({rule.nodes.length})
+                          </summary>
+                          <div className="mt-3 flex flex-col gap-2.5">
+                            {rule.nodes.map((node, index) => (
+                              <div key={`${rule.id}-${index}`} className="panel-flat rounded-xl p-3.5">
+                                <div className="break-all font-mono text-[11px] text-sky-200">{node.target.join(" ")}</div>
+                                {node.html ? (
+                                  <pre className="scroll-thin mt-2 overflow-x-auto rounded-lg border border-sky-400/10 bg-navy-950/70 p-2.5 text-[11px] text-slate-300">
+                                    <code>{node.html}</code>
+                                  </pre>
+                                ) : null}
+                                {node.failureSummary ? (
+                                  <p className="mt-2 whitespace-pre-wrap text-[11px] leading-relaxed text-muted-foreground">
+                                    {node.failureSummary}
+                                  </p>
+                                ) : null}
+                              </div>
+                            ))}
+                          </div>
+                        </details>
+                      ) : (
+                        <p className="mt-3 text-xs text-muted-foreground">No stored element evidence for this rule.</p>
+                      )}
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <Button
+                          variant="ghostNeon"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedFinding(rule.id);
+                            explain.mutate();
+                          }}
+                          disabled={explain.isPending}
+                        >
+                          <MessageSquareText className="size-3.5" aria-hidden="true" />
+                          Explain this finding
+                        </Button>
+                      </div>
+                    </PanelBody>
+                  </Panel>
+                ))}
+              </div>
+            ))}
+            {filtered.length === 0 ? (
+              <Panel>
+                <EmptyState
+                  title="No findings match the current filter"
+                  body="Clear the search box or choose a different impact level to see the stored findings again."
+                  action={
+                    <Button
+                      variant="ghostNeon"
+                      size="sm"
+                      onClick={() => {
+                        setQuery("");
+                        setImpactFilter("all");
+                      }}
+                    >
+                      Reset filters
+                    </Button>
+                  }
+                />
+              </Panel>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {/* Report + assistant */}
+      <div className="mt-8 grid gap-5 lg:grid-cols-2">
+        <Panel>
+          <PanelHeader>
+            <PanelTitle icon={<FileText className="size-4 text-cyan-300" aria-hidden="true" />}>PDF report</PanelTitle>
+          </PanelHeader>
+          <PanelBody>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              A branded report generated from this stored scan: executive summary, severity totals, findings with their
+              evidence, remediation guidance and the scan's own limitations.
+            </p>
+            <Button variant="primary" size="sm" className="mt-4" onClick={() => pdf.mutate()} disabled={pdf.isPending}>
+              {pdf.isPending ? (
+                <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />
+              ) : (
+                <FileText className="size-3.5" aria-hidden="true" />
+              )}
+              {pdf.isPending ? "Generating PDF…" : "Download PDF report"}
+            </Button>
+          </PanelBody>
+        </Panel>
+
+        <Panel id="assistant">
+          <PanelHeader>
+            <PanelTitle icon={<MessageSquareText className="size-4 text-violet-300" aria-hidden="true" />}>
+              AI assistant
+            </PanelTitle>
+          </PanelHeader>
+          <PanelBody>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              Explanations are generated from this scan's stored findings — the assistant cannot describe a finding that
+              was not detected.
+            </p>
+            {violations.length > 0 ? (
+              <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Select a finding to explain">
+                {violations.map((v) => (
+                  <button
+                    key={v.id}
+                    type="button"
+                    aria-pressed={selectedFinding === v.id}
+                    className={`rounded-full px-3 py-1.5 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 ${
+                      selectedFinding === v.id
+                        ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white"
+                        : "border border-border text-muted-foreground hover:border-sky-400/40 hover:text-sky-200"
+                    }`}
+                    onClick={() => setSelectedFinding(v.id)}
+                  >
+                    {v.id}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+            <Button
+              type="button"
+              variant="ghostNeon"
+              size="sm"
+              className="mt-4 w-fit"
+              onClick={() => explain.mutate()}
+              disabled={explain.isPending || (!violations.length && !scan.incomplete.length)}
+            >
+              {explain.isPending ? "Explaining…" : "Explain selected finding"}
+            </Button>
+
+            {explain.isError ? (
+              <p className="mt-3 text-xs text-rose-300">The explanation could not be generated. Try again.</p>
+            ) : null}
+
+            {explain.data ? (
+              <div className="mt-4 flex flex-col gap-2.5 rounded-xl border border-sky-400/10 bg-navy-950/60 p-4 text-sm leading-relaxed">
+                <p><span className="font-medium text-sky-200">What is the problem? </span>{explain.data.what}</p>
+                <p><span className="font-medium text-sky-200">Why does it matter? </span>{explain.data.why}</p>
+                <p><span className="font-medium text-sky-200">Who is affected? </span>{explain.data.who}</p>
+                <div>
+                  <span className="font-medium text-sky-200">What needs to be done?</span>
+                  <ol className="mt-1 list-decimal pl-5 text-slate-300">
+                    {explain.data.steps.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ol>
+                </div>
+                <p><span className="font-medium text-sky-200">Example fix: </span><code className="break-all font-mono text-xs">{explain.data.example}</code></p>
+                <p><span className="font-medium text-sky-200">Where to apply: </span>{explain.data.where}</p>
+                <p><span className="font-medium text-sky-200">How to verify: </span>{explain.data.verify}</p>
+                <p className="text-[11px] text-muted-foreground">
+                  Evidence for this explanation: {explain.data.findingId} (impact {explain.data.impact}).
+                </p>
+              </div>
+            ) : null}
+          </PanelBody>
+        </Panel>
+      </div>
+
+      {/* Recommendations */}
+      {recommendations && recommendations.length > 0 ? (
+        <section className="mt-8" aria-labelledby="recommendations-heading">
+          <h2 id="recommendations-heading" className="text-lg font-semibold tracking-tight text-slate-100">
+            Fix recommendations
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Advisory guidance derived from the stored findings. Nothing on your site is modified.
+          </p>
+          <div className="mt-5 grid gap-3 lg:grid-cols-2">
+            {recommendations.map((r) => (
+              <Panel key={r.findingId}>
+                <PanelHeader>
+                  <PanelTitle className="font-mono text-sm text-sky-300">{r.findingId}</PanelTitle>
+                  <span className="rounded-full border border-violet-400/30 bg-violet-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-violet-200">
+                    Priority {r.priority}
+                  </span>
+                </PanelHeader>
+                <PanelBody>
+                  <p className="text-sm text-slate-100">{r.problem}</p>
+                  <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-xs leading-relaxed text-slate-300">
                     {r.steps.map((s, i) => (
                       <li key={i}>{s}</li>
                     ))}
                   </ol>
-                  <pre className="mt-2 overflow-auto rounded border border-border/60 bg-navy-950 p-2 font-mono text-[11px] text-muted-foreground">{r.example}</pre>
-                  <p className="mt-1.5 text-xs text-muted-foreground">{r.caveat}</p>
-                </div>
-              ))}
-            </div>
+                  <pre className="scroll-thin mt-3 overflow-x-auto rounded-lg border border-sky-400/10 bg-navy-950/70 p-3 font-mono text-[11px] text-slate-300">
+                    {r.example}
+                  </pre>
+                  <p className="mt-2 text-xs text-sky-200">Verify: {r.verify}</p>
+                  <p className="mt-1.5 text-[11px] text-muted-foreground">{r.caveat}</p>
+                </PanelBody>
+              </Panel>
+            ))}
           </div>
-        )}
+        </section>
+      ) : null}
 
-        {scan.incomplete.length > 0 && (
-          <div className="card-neon rounded-2xl p-5">
-            <h2 className="text-sm font-semibold tracking-tight">Rules axe-core could not decide</h2>
-            <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-              These rules need human judgement (for example whether an image is decorative). They are not passes and not
-              failures.
-            </p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {scan.incomplete.map((rule) => (
-                <li key={rule.id} className="rounded-full border border-border px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
-                  {rule.id}
-                </li>
+      <div className="mt-8 grid gap-5 lg:grid-cols-2">
+        {scan.incomplete.length > 0 ? (
+          <Panel>
+            <PanelHeader>
+              <PanelTitle icon={<ShieldCheck className="size-4 text-high" aria-hidden="true" />}>
+                Rules axe-core could not decide
+              </PanelTitle>
+            </PanelHeader>
+            <PanelBody>
+              <p className="text-xs leading-relaxed text-muted-foreground">
+                These rules need human judgement (for example whether an image is decorative). They are neither passes nor
+                failures.
+              </p>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {scan.incomplete.map((rule) => (
+                  <li key={rule.id} className="rounded-full border border-border px-2.5 py-1 font-mono text-[11px] text-muted-foreground">
+                    {rule.id}
+                  </li>
+                ))}
+              </ul>
+            </PanelBody>
+          </Panel>
+        ) : null}
+
+        <Panel className="border-sky-400/15 bg-sky-500/5">
+          <PanelHeader>
+            <PanelTitle icon={<ShieldCheck className="size-4 text-sky-200" aria-hidden="true" />}>
+              Limitations of this scan
+            </PanelTitle>
+          </PanelHeader>
+          <PanelBody>
+            <ul className="flex flex-col gap-2 text-xs leading-relaxed text-muted-foreground">
+              {scan.limitations.map((line) => (
+                <li key={line}>{line}</li>
               ))}
             </ul>
-          </div>
-        )}
-
-        <div className="rounded-xl border border-sky-400/15 bg-sky-500/5 p-5">
-          <h2 className="text-sm font-semibold text-sky-200">Limitations of this scan</h2>
-          <ul className="mt-2 flex flex-col gap-1.5 text-xs leading-relaxed text-muted-foreground">
-            {scan.limitations.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </div>
+          </PanelBody>
+        </Panel>
       </div>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-xl border border-border/60 bg-card px-4 py-3">
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className="mt-1 font-mono text-2xl tabular text-slate-100">{value}</div>
-    </div>
+    </AppShell>
   );
 }
