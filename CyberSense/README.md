@@ -4,7 +4,21 @@ CyberSense is an accessibility-first website scanning and analysis platform. It 
 
 Legacy CyberSense cyber-exposure functionality remains in the codebase under `/assessments/*` for internal/historical use, but accessibility and security scanning are the primary workflows.
 
-See [`docs/CYBERSENSE_SETUP_AND_DEMO_GUIDE.md`](docs/CYBERSENSE_SETUP_AND_DEMO_GUIDE.md) for full setup, environment, database, and demo instructions.
+See [`docs/CYBERSENSE_SETUP_AND_DEMO.md`](docs/CYBERSENSE_SETUP_AND_DEMO.md) for the full setup, environment, database, troubleshooting, and demo guide.
+
+## Quick Start
+
+From the directory containing `package.json`:
+
+```bash
+npm install
+npm run dev:a11y-demo    # demo server (scanning the bundled fixture is allowed)
+# or: npm run dev        # standard server (public targets only)
+```
+
+Then open <http://127.0.0.1:8080/accessibility> and scan `http://127.0.0.1:8080/a11y-demo` — a synthetic page with known defects, for controlled demonstrations.
+
+Stop the server with **Ctrl+C** in its terminal. Saved scans only survive restarts when `CYBERSENSE_PGLITE_DATA_DIR` is set — see the [setup guide](docs/CYBERSENSE_SETUP_AND_DEMO.md), section I.
 
 ## Primary URLs
 

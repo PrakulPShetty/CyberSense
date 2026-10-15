@@ -51,4 +51,6 @@ attachments/
 docs/*
 # The mentor-facing report is a deliverable, not scratch tooling.
 !docs/MENTOR_DEMO_GUIDE.md
+# Same for the setup & demo guide.
+!docs/CYBERSENSE_SETUP_AND_DEMO.md
 
